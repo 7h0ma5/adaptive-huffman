@@ -1,0 +1,97 @@
+\documentclass[twoside,graphics,11pt,dvips]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx,curves,epsf,float,rotating}
+\usepackage{epsf,epsfig,eepic}
+\usepackage{latexsym,amsmath,amssymb}
+\usepackage{german,a4,amsmath}
+\usepackage{theorem}
+\usepackage{dcolumn}
+
+\newcommand{\Frac}[2]{\frac{\displaystyle #1}{\displaystyle #2}}
+\newlength{\textwd}
+\newlength{\oddsidemargintmp}
+\newlength{\evensidemargintmp}
+\newcommand{\hspaceof}[2]{\settowidth{\textwd}{#1}\mbox{\hspace{#2\textwd}}}
+\newlength{\textht}
+\newcommand{\vspaceof}[3]{\settoheight{\textht}{#1}\mbox{\raisebox{#2\textht}{#3}}}
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+
+
+\newenvironment{deflist}[1][\quad]%
+{  \begin{list}{}{%
+      \renewcommand{\makelabel}[1]{\textbf{##1}\hfil}%
+      \settowidth{\labelwidth}{\textbf{#1}}%
+      \setlength{\leftmargin}{\labelwidth}
+      \addtolength{\leftmargin}{\labelsep}}}
+{  \end{list}}
+
+
+\newenvironment{Quote}% Definition of Quote
+{  \begin{list}{}{%
+      \setlength{\rightmargin}{0pt}}
+      \item[]\ignorespaces}
+{\unskip\end{list}}
+
+
+\newtheorem{Cor}{Corollary}
+\theoremstyle{break}
+\theorembodyfont{\itshape}
+\newtheorem{Def}[Cor]{Definition}
+\theoremheaderfont{\scshape}
+
+\newcolumntype{.}{D{.}{.}{-1}}
+
+
+\pagestyle{headings}
+
+
+\textwidth 15cm
+\textheight 23cm
+\oddsidemargin 1cm
+\evensidemargin 0cm
+%\parindent 0mm
+
+\begin{document}
+
+\pagestyle{empty}
+\begin{center}
+
+    Rheinisch-Westfälische Technische Hochschule Aachen \\
+    Lehrstuhl füur Informatik VI \\
+    Prof. Dr.-Ing. Hermann Ney\\[6ex]
+    Proseminar Datenkompression im WS 2014/2015\\[12ex]
+
+    \LARGE
+    \textbf{Adaptive Huffman Kodierung und Anwendungen} \\[6ex]
+    \textit{Thomas Gatzweiler} \\[6ex]
+    \Large
+    Matrikelnummer 318947 \\[6ex]
+    12. November 2014
+
+    \vfill
+    \Large Betreuer: Patrick Dötsch
+\end{center}
+
+\newpage
+\
+\newpage
+
+\section{1. Überschrift}
+Test \cite{Salomon:2010}
+
+\pagestyle{headings}
+\tableofcontents
+\listoftables
+\listoffigures
+\newpage
+\pagestyle{empty}
+\
+\newpage
+\pagestyle{headings}
+
+\addcontentsline{toc}{section}{Literaturverzeichnis}
+\bibliographystyle{plain}
+\bibliography{adaptive_huffman}
+
+\end{document}

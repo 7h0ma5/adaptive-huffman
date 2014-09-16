@@ -58,12 +58,12 @@
 \begin{center}
 
     Rheinisch-Westfälische Technische Hochschule Aachen \\
-    Lehrstuhl füur Informatik VI \\
+    Lehrstuhl für Informatik VI \\
     Prof. Dr.-Ing. Hermann Ney\\[6ex]
     Proseminar Datenkompression im WS 2014/2015\\[12ex]
 
     \LARGE
-    \textbf{Adaptive Huffman Kodierung und Anwendungen} \\[6ex]
+    \textbf{Adaptive Huffman-Kodierung und Anwendungen} \\[6ex]
     \textit{Thomas Gatzweiler} \\[6ex]
     \Large
     Matrikelnummer 318947 \\[6ex]
@@ -77,9 +77,6 @@
 \
 \newpage
 
-\section{1. Überschrift}
-Test \cite{Salomon:2010}
-
 \pagestyle{headings}
 \tableofcontents
 \listoftables
@@ -89,6 +86,88 @@ Test \cite{Salomon:2010}
 \
 \newpage
 \pagestyle{headings}
+
+%\begin{abstract}
+%Diese Ausarbeitung enthält eine Einführun in die Funktionsweise der
+%Huffman-Kodierung und im speziellen der adaptiven Huffman-Kodierung.
+%\end{abstract}
+
+\section{Einleitung}
+Bei einer Datenübertragung mit eingeschränkter Bandbreite ist eine
+Komprimierung der Daten von großem Vorteil.
+
+Ein Problem der Huffman-Kodierung ist, dass die Wahrscheinlichkeiten
+der Quellsymbole vor der Kodierung bekannt sein müssen. Wenn die zu
+komprimierenden Daten lokal verfügbar sind, ist es möglich, zuerst die
+Häufigkeiten der vorkommenden Quellsymbole zu analysieren und dann
+die Daten zu kodieren. Handelt es sich aber um einen laufenden
+Datenstrom, ist es nicht möglich die Häufig im vorraus zu ermitteln.
+Eine Lösung für dieses Problem bietet die adaptive Huffman-Kodierung,
+die sich laufend an die Häufigkeiten der Quellsymbole anpasst.
+
+\section{Huffman-Kodierung}
+Die Huffman-Kodierung ordnet den auftauchenden Quellsymbolen Codewörter je
+nach Häufigkeit zu.
+
+\subsection{Huffman-Baum}
+
+\subsection{Kodierung}
+
+\subsection{Dekodierung}
+
+\subsection{Mittlere Codewort-Länge}
+
+
+\section{Adaptive Huffman-Kodierung}
+Die adaptive Huffman-Kodierung aktualisiert laufend den Huffman-Baum.
+
+Da anfangs noch keine Häufigkeiten der auftauchenden Wörter Symbole
+bekannt sind, wird mit einem leeren Baum begonnen. Mit jeden neuen
+Wort wird der Baum entsprechend der neuen
+Wahrscheinlichkeitsverteilung aktualisiert. Dieser Schritt wird auch
+im Dekodierer durchgeführt, so dass eine Übertragung des Huffman-Baums
+nicht nötig ist.
+
+Der Vorteil der adaptiven Huffman-Kodierung ist die Möglichkeit einen
+Datenstrom zu komprimieren ohne vorher Informationen über die
+Häufigkeitsverteilung der Daten zu besitzen. Das macht es auch möglich
+Dateien in nur einem Durchgang zu komprimieren, ohne voher die
+Häufigkeiten der vorkommenden Wörter zu analysieren. Ein Nachteil ist,
+dass diese Methode anfällig für Übertragungsfehler ist, da die
+Hufmann-Bäume im Encoder und Decoder in diesem Fall divergieren können.
+
+\subsection{Kodierung}
+
+\subsection{Dekodierung}
+
+\subsection{Aktualisierung des Huffman-Baums}
+
+% Beispiel
+
+\subsection{Überlauf der Häufigkeitszähler}
+
+\subsection{Überlauf der Codeworte}
+
+% -> Salomon 5.2.7 Height of a Huffman Tree
+% Betrifft nur den Kodierprozess
+
+\subsection{Algorithmus von Vitter}
+
+\section{Anwendungen}
+
+% -> Salomon 5.2.9 Is Huffman Coding Dead
+
+Die hier vorgestellten Anwendungsfälle basieren auf den Beispielen aus \cite{Sayood:2006}.
+
+% -> Sayood 3.8 Applications of Huffman Coding
+\subsection{Textkomprimierung}
+
+\subsection{Verlustfreie Bildkomprimierung}
+
+\subsection{Audiokomprimierung}
+
+
+Test \cite{Salomon:2010}  \cite{Williams:1991}
 
 \addcontentsline{toc}{section}{Literaturverzeichnis}
 \bibliographystyle{plain}

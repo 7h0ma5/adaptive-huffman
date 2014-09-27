@@ -1,12 +1,12 @@
-\documentclass[twoside,graphics,11pt,dvips]{article}
+\documentclass[twoside,11pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
-\usepackage{graphicx,curves,epsf,float,rotating}
-\usepackage{epsf,epsfig,eepic}
 \usepackage{latexsym,amsmath,amssymb}
-\usepackage{german,a4,amsmath}
+\usepackage{ngerman}
 \usepackage{theorem}
 \usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{trees}
 
 \newcommand{\Frac}[2]{\frac{\displaystyle #1}{\displaystyle #2}}
 \newlength{\textwd}
@@ -45,12 +45,21 @@
 
 \pagestyle{headings}
 
-
 \textwidth 15cm
 \textheight 23cm
 \oddsidemargin 1cm
 \evensidemargin 0cm
-%\parindent 0mm
+
+\tikzset{
+grow=left,
+level 1/.style={sibling distance=5cm, level distance=3.0cm},
+level 2/.style={sibling distance=3cm, level distance=4.0cm},
+level 3/.style={sibling distance=2cm, level distance=4.0cm},
+}
+
+% Define styles for bags and leafs
+\tikzstyle{bag} = [text width=4em, text centered]
+\tikzstyle{end} = [circle, minimum width=3pt,fill, inner sep=0pt]
 
 \begin{document}
 
@@ -87,8 +96,12 @@
 \newpage
 \pagestyle{headings}
 
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+
 %\begin{abstract}
-%Diese Ausarbeitung enthält eine Einführun in die Funktionsweise der
+%Diese Ausarbeitung enthält eine Einführung in die Funktionsweise der
 %Huffman-Kodierung und im speziellen der adaptiven Huffman-Kodierung.
 %\end{abstract}
 
@@ -106,14 +119,66 @@ Eine Lösung für dieses Problem bietet die adaptive Huffman-Kodierung,
 die sich laufend an die Häufigkeiten der Quellsymbole anpasst.
 
 \section{Huffman-Kodierung}
-Die Huffman-Kodierung ordnet den auftauchenden Quellsymbolen Codewörter je
-nach Häufigkeit zu.
+
+Dieser Abschnitt gibt eine Einführung in die Hufmann-Kodierung, auf welche die
+adaptive Huffman-Kodierung aufbaut. Der Abschnitt basiert auf \cite[S.
+214-228]{Salomon:2010}.
+
+Die Huffman-Kodierung ist eine stochastische Kodierung, das heißt, sie kodiert
+Daten basierend auf der Häufigkeit der vorkommenden Quellsymbole. Häufig
+vorkommenden Symbolen wird ein kürzeres Codewort zugewiesen als selteneren
+Symbolen.
 
 \subsection{Huffman-Baum}
 
+Um Daten mit der Huffman-Kodierung zu komprimieren muss zuerst der sogenannte
+Huffman-Baum aufgebaut werden. Es handelt sich dabei um einen Binärbaum
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\node[bag]
+    child {
+        node[bag] {Bag 2}
+            child {
+                node[end, label=left:{test}] {}
+                edge from parent
+                node[below]  {$\frac{4}{9}$}
+            }
+            child {
+                node[end, label=left:{test}] {}
+                edge from parent
+                node[below]  {$\frac{5}{9}$}
+            }
+            edge from parent
+            node[below]  {$\frac{4}{7}$}
+    }
+    child {
+        node[bag] {Bag 2}
+        child {
+                node[end, label=left:{test2}] {}
+                edge from parent
+                node[below]  {$\frac{3}{9}$}
+            }
+            child {
+                node[end, label=left:{test3}] {}
+                edge from parent
+                node[below]  {$\frac{6}{9}$}
+            }
+        edge from parent
+        node[below]  {$\frac{3}{7}$}
+    };
+\end{tikzpicture}
+\caption{M1} \label{fig:M1}
+\end{figure}
+
 \subsection{Kodierung}
+Nachdem der Huffman-Baum generiert wurde, kann er zur Kodierung von Daten
+verwendet werden.
 
 \subsection{Dekodierung}
+Auch für die Dekodierung wird der Huffman-Baum verwendet. Dazu muss der
+Dekodierer die Häufigkeitsverteilung der Quellsymbole kennen
 
 \subsection{Mittlere Codewort-Länge}
 
@@ -157,7 +222,8 @@ Hufmann-Bäume im Encoder und Decoder in diesem Fall divergieren können.
 
 % -> Salomon 5.2.9 Is Huffman Coding Dead
 
-Die hier vorgestellten Anwendungsfälle basieren auf den Beispielen aus \cite{Sayood:2006}.
+Die hier vorgestellten Anwendungsfälle basieren auf den Beispielen aus
+\cite{Sayood:2006}.
 
 % -> Sayood 3.8 Applications of Huffman Coding
 \subsection{Textkomprimierung}

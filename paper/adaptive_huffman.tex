@@ -5,7 +5,9 @@
 \usepackage{ngerman}
 \usepackage{theorem}
 \usepackage{dcolumn}
+\usepackage{url}
 \usepackage{tikz}
+\usepackage[hidelinks]{hyperref}
 \usetikzlibrary{trees}
 
 \newcommand{\Frac}[2]{\frac{\displaystyle #1}{\displaystyle #2}}
@@ -17,7 +19,6 @@
 \newcommand{\vspaceof}[3]{\settoheight{\textht}{#1}\mbox{\raisebox{#2\textht}{#3}}}
 \newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
 
-
 \newenvironment{deflist}[1][\quad]%
 {  \begin{list}{}{%
       \renewcommand{\makelabel}[1]{\textbf{##1}\hfil}%
@@ -26,13 +27,11 @@
       \addtolength{\leftmargin}{\labelsep}}}
 {  \end{list}}
 
-
 \newenvironment{Quote}% Definition of Quote
 {  \begin{list}{}{%
       \setlength{\rightmargin}{0pt}}
       \item[]\ignorespaces}
 {\unskip\end{list}}
-
 
 \newtheorem{Cor}{Corollary}
 \theoremstyle{break}
@@ -41,7 +40,6 @@
 \theoremheaderfont{\scshape}
 
 \newcolumntype{.}{D{.}{.}{-1}}
-
 
 \pagestyle{headings}
 
@@ -65,7 +63,6 @@ level 3/.style={sibling distance=2cm, level distance=4.0cm},
 
 \pagestyle{empty}
 \begin{center}
-
     Rheinisch-Westfälische Technische Hochschule Aachen \\
     Lehrstuhl für Informatik VI \\
     Prof. Dr.-Ing. Hermann Ney\\[6ex]
@@ -100,23 +97,22 @@ level 3/.style={sibling distance=2cm, level distance=4.0cm},
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
 
-%\begin{abstract}
-%Diese Ausarbeitung enthält eine Einführung in die Funktionsweise der
-%Huffman-Kodierung und im speziellen der adaptiven Huffman-Kodierung.
-%\end{abstract}
+% Literaturverzeichnis wie in der .bib Datei ordnen
+\nocite{*}
 
 \section{Einleitung}
-Bei einer Datenübertragung mit eingeschränkter Bandbreite ist eine
-Komprimierung der Daten von großem Vorteil.
 
-Ein Problem der Huffman-Kodierung ist, dass die Wahrscheinlichkeiten
-der Quellsymbole vor der Kodierung bekannt sein müssen. Wenn die zu
-komprimierenden Daten lokal verfügbar sind, ist es möglich, zuerst die
-Häufigkeiten der vorkommenden Quellsymbole zu analysieren und dann
-die Daten zu kodieren. Handelt es sich aber um einen laufenden
-Datenstrom, ist es nicht möglich die Häufig im vorraus zu ermitteln.
-Eine Lösung für dieses Problem bietet die adaptive Huffman-Kodierung,
-die sich laufend an die Häufigkeiten der Quellsymbole anpasst.
+Bei einer Datenübertragung mit eingeschränkter Bandbreite ist eine Komprimierung
+der Daten von großem Vorteil.
+
+Ein Problem der Huffman-Kodierung ist, dass die Wahrscheinlichkeiten der
+Quellsymbole vor der Kodierung bekannt sein müssen. Wenn die zu komprimierenden
+Daten lokal verfügbar sind, ist es möglich, zuerst die Häufigkeiten der
+vorkommenden Quellsymbole zu analysieren und dann die Daten zu kodieren. Handelt
+es sich aber um einen laufenden Datenstrom, ist es nicht möglich die Häufig im
+vorraus zu ermitteln. Eine Lösung für dieses Problem bietet die adaptive
+Huffman-Kodierung, die sich laufend an die Häufigkeiten der Quellsymbole
+anpasst.
 
 \section{Huffman-Kodierung}
 
@@ -129,15 +125,26 @@ Daten basierend auf der Häufigkeit der vorkommenden Quellsymbole. Häufig
 vorkommenden Symbolen wird ein kürzeres Codewort zugewiesen als selteneren
 Symbolen.
 
+Es gibt Fälle, in denen durch die Huffman-Kodierung keine Komprimierung erziehlt
+werden kann. Zum Beispiel mit den Quellsymbolen 0 und 1 und der Folge
+{\tt01010101}. Beide Quellsymbole haben eine Wahrscheinlichkeit von 50\%,
+deshalb bekommen sie beide ein Codewort der Länge 1 zugewiesen.
+
 \subsection{Huffman-Baum}
 
 Um Daten mit der Huffman-Kodierung zu komprimieren muss zuerst der sogenannte
-Huffman-Baum aufgebaut werden. Es handelt sich dabei um einen Binärbaum
+\emph{Huffman-Baum} aufgebaut werden. Es handelt sich dabei um einen Binärbaum,
+der einigen Bedingungen unterliegt.
+
+Der Huffman-Baum wird von unten nach oben Aufgebaut, also von den Blättern zur
+Wurzel. Jedes Blatt steht für ein Quellsymbol. Aus dem Pfad zu einem Blatt lässt
+sich das Codewort für dieses Blatt ableiten.
+
 
 \begin{figure}
 \centering
 \begin{tikzpicture}
-\node[bag]
+\node[bag] {}
     child {
         node[bag] {Bag 2}
             child {
@@ -182,24 +189,28 @@ Dekodierer die Häufigkeitsverteilung der Quellsymbole kennen
 
 \subsection{Mittlere Codewort-Länge}
 
+\subsection{Höhe des Baumes}
+
+Da die Höhe des Huffman-Baumes der maximalen Codewort länge entspricht,
+ist die Berechnung von Interesse.
 
 \section{Adaptive Huffman-Kodierung}
+
 Die adaptive Huffman-Kodierung aktualisiert laufend den Huffman-Baum.
 
-Da anfangs noch keine Häufigkeiten der auftauchenden Wörter Symbole
-bekannt sind, wird mit einem leeren Baum begonnen. Mit jeden neuen
-Wort wird der Baum entsprechend der neuen
-Wahrscheinlichkeitsverteilung aktualisiert. Dieser Schritt wird auch
-im Dekodierer durchgeführt, so dass eine Übertragung des Huffman-Baums
-nicht nötig ist.
+Da anfangs noch keine Häufigkeiten der auftauchenden Wörter Symbole bekannt
+sind, wird mit einem leeren Baum begonnen. Mit jeden neuen Wort wird der Baum
+entsprechend der neuen Wahrscheinlichkeitsverteilung aktualisiert. Dieser
+Schritt wird auch im Dekodierer durchgeführt, so dass eine Übertragung des
+Huffman-Baums nicht nötig ist.
 
-Der Vorteil der adaptiven Huffman-Kodierung ist die Möglichkeit einen
-Datenstrom zu komprimieren ohne vorher Informationen über die
-Häufigkeitsverteilung der Daten zu besitzen. Das macht es auch möglich
-Dateien in nur einem Durchgang zu komprimieren, ohne voher die
-Häufigkeiten der vorkommenden Wörter zu analysieren. Ein Nachteil ist,
-dass diese Methode anfällig für Übertragungsfehler ist, da die
-Hufmann-Bäume im Encoder und Decoder in diesem Fall divergieren können.
+Der Vorteil der adaptiven Huffman-Kodierung ist die Möglichkeit einen Datenstrom
+zu komprimieren ohne vorher Informationen über die Häufigkeitsverteilung der
+Daten zu besitzen. Das macht es auch möglich Dateien in nur einem Durchgang zu
+komprimieren, ohne voher die Häufigkeiten der vorkommenden Wörter zu
+analysieren. Ein Nachteil ist, dass diese Methode anfällig für
+Übertragungsfehler ist, da die Hufmann-Bäume im Encoder und Decoder in diesem
+Fall divergieren können.
 
 \subsection{Kodierung}
 
@@ -211,7 +222,36 @@ Hufmann-Bäume im Encoder und Decoder in diesem Fall divergieren können.
 
 \subsection{Überlauf der Häufigkeitszähler}
 
+Die Häufigkeitszähler werden bei der adaptiven Huffman-Kodierung als Integer
+gespeichert. Abhängig von der Datenmenge kann es passieren, dass die auftretende
+Häufigkeit eines Symbols die Grenze des darstellbaren Zahlenbereiches
+überschreitet -- es kommt zu einem Integerüberlauf.
+
+Der darstellbare Zahlenbereich für Integer ist abhängig von der verwendeten
+Hardware. Mit modernen 64-Bit Rechnerarchitekturen ist die Wahrscheinlichkeit
+für einen Überlauf heute deutlich geringer, die Möglichkeit sollte dennoch
+nicht vernachlässigt werden. Viele Microcontroller rechnen auch heute noch
+standardmäßig mit 8- oder 16-Bit-Integern, die nur 256 bzw. 65536 Werte
+darstellen können.
+
+Eine Möglichkeit zu Verhinderung der Überläufe wäre die Benutzung einer
+Biblitothek zur Speicherung von Integern mit dynamischer Größe, wie zum Beispiel
+die \emph{GNU Multiple Precision Arithmetic Library}\cite{GMP}. Ein Nachteil ist
+der entstehende Overhead, außerdem ist die Verwendung einer solchen Bibliothek
+bei vielen Microcontrollern nicht möglich.
+
+Eine einfache Methode ist das Prüfen auf einen möglichen Überlauf wenn der
+Häufigkeitszähler inkrementiert wird. Würde durch das inkrementieren ein
+Überlauf entstehen, werden alle Häufigkeitszähler neu skaliert, indem sie durch
+2 dividiert werden, was einer einfachen Right-Shift-Operation enstpricht. Dabei
+wird von den Blättern des Huffman-Baums gestartet, bei ihnen wird der Zähler
+halbiert. Dann wird jeder Elternknoten mit der Summe der Kinderknoten
+aktuallisiert.
+
 \subsection{Überlauf der Codeworte}
+
+Wie in Abschnitt xy beschrieben, wird die maximale Länge eines Codeworts
+von der Höhe des Huffman-Baums bestimmt.
 
 % -> Salomon 5.2.7 Height of a Huffman Tree
 % Betrifft nur den Kodierprozess
@@ -219,6 +259,10 @@ Hufmann-Bäume im Encoder und Decoder in diesem Fall divergieren können.
 \subsection{Algorithmus von Vitter}
 
 \section{Anwendungen}
+
+In der Praxis wird die Huffman-Kodierung in der adaptiven Variante zum Beispiel
+im Unix-Tool \emph{compact} verwendet. Bei vielen anderen Programmen ist die
+Huffman-Kodierung Teil eines mehrstufigen Prozesses der Komprimierung.
 
 % -> Salomon 5.2.9 Is Huffman Coding Dead
 
@@ -236,7 +280,7 @@ Die hier vorgestellten Anwendungsfälle basieren auf den Beispielen aus
 Test \cite{Salomon:2010}  \cite{Williams:1991}
 
 \addcontentsline{toc}{section}{Literaturverzeichnis}
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{adaptive_huffman}
 
 \end{document}

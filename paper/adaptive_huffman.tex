@@ -1,8 +1,9 @@
 \documentclass[twoside,11pt,a4paper]{article}
 
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{latexsym,amsmath,amssymb}
-\usepackage{ngerman}
+\usepackage[ngerman]{babel}
 \usepackage{theorem}
 \usepackage{dcolumn}
 \usepackage{url}
@@ -51,8 +52,8 @@
 \tikzset{
 grow=down,
 level 1/.style={sibling distance=2.5cm, level distance=1.0cm},
-level 2/.style={sibling distance=1cm, level distance=1.0cm},
-level 3/.style={sibling distance=1cm, level distance=1.5cm},
+level 2/.style={sibling distance=2.0cm, level distance=1.0cm},
+level 3/.style={sibling distance=1.5cm, level distance=1.0cm},
 edge from parent path={
 (\tikzparentnode) |-
 ($(\tikzparentnode)!0.5!(\tikzchildnode)$) -|
@@ -62,6 +63,8 @@ edge from parent path={
 % Define styles for bags and leafs
 \tikzstyle{bag} = [text width=8em, text centered]
 \tikzstyle{cicleend} = [circle, minimum width=3pt, fill, inner sep=0pt]
+
+\renewcommand*\ttdefault{txtt}
 
 \begin{document}
 
@@ -140,30 +143,41 @@ Um Daten mit der Huffman-Kodierung zu komprimieren muss zuerst der sogenannte
 \emph{Huffman-Baum} aufgebaut werden. Es handelt sich dabei um einen Binärbaum,
 der einigen Bedingungen unterliegt.
 
-Der Huffman-Baum wird von unten nach oben Aufgebaut, also von den Blättern zur
+Der Huffman-Baum wird von unten nach oben aufgebaut, also von den Blättern zur
 Wurzel. Jedes Blatt steht für ein Quellsymbol. Aus dem Pfad zu einem Blatt lässt
 sich das Codewort für dieses Blatt ableiten.
 
-% sibling-property
+\begin{table}[h]
+\centering
+\caption{Häufkeitsverteilung Beispiel}
 
+\begin{tabular}{c|c|c}
+$i$ & $a_i$ & $P(a_i)$ \\ \hline
+1 & A & 0.32 \\
+2 & B & 0.03 \\
+3 & C & 0.08 \\
+4 & D & 0.12 \\
+5 & E & 0.45 \\
+\end{tabular}
+\end{table}
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \begin{tikzpicture}
 \node {}
     child {
-            child {
-                node {A}
-                edge from parent
-                node[left]  {$\frac{4}{9}$}
-            }
-            child {
-                node {B}
-                edge from parent
-                node[right]  {$\frac{5}{9}$}
-            }
+        child {
+            node {A}
             edge from parent
-            node[left]  {$\frac{4}{7}$}
+            node[left]  {$\frac{4}{9}$}
+        }
+        child {
+            node {B}
+            edge from parent
+            node[right]  {$\frac{5}{9}$}
+        }
+        edge from parent
+        node[left]  {$\frac{4}{7}$}
     }
     child {
         child {
@@ -180,20 +194,95 @@ sich das Codewort für dieses Blatt ableiten.
         node[right] {$\frac{3}{7}$}
     };
 \end{tikzpicture}
-\caption{M1} \label{fig:M1}
+\caption{Huffman-Baum Beispiel} \label{fig:HBEX}
 \end{figure}
 
+% sibling-property
+
 \subsection{Kodierung}
+
 Nachdem der Huffman-Baum generiert wurde, kann er zur Kodierung von Daten
-verwendet werden.
+verwendet werden. Um eine Folge von Quellsymbolen zu kodieren, wird der Baum
+vom Blatt des Quellsymbols zur Wurzel traversiert.
+
+In Abbildung \ref{fig:HKOD} ist ein Huffman-Baum mit den Quellsymbolen \emph{H}, \emph{R},
+\emph{T} und \emph{W} abgebildet. Um das Wort \emph{RWTH} zu kodieren, wird nun
+für jedes Symbol der Baum vom Blatt dieses Symbols zur Wurzel durchgegangen.
+
+Dabei wird das Codewort gebildet, indem bei jedem Knoten, der auf dem Weg erreicht wird,
+eine {\tt1} an das Codewort gehängt, wenn der vorherige Knoten der linke Nachfolger war,
+und eine {\tt0} an das Codewort gehängt, wenn der vorherige Knoten der rechte Nachfolger war.
+
+Für \emph{R} erhält man so das Codewort {\tt000}, für \emph{W} das Codewort
+{\tt100}, für \emph{T} das Codewort {\tt1} und für \emph{H} das Codewort
+\emph{\tt10}. Insgesamt wird \emph{RWTH} also zu {\tt000100110} kodiert.
+
+% Der beste Code ist der mit der kleinsten Varianz, da die Buffer nicht groß sein müssen
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\node {}
+    child {
+        node {\tt1}
+        child {
+            node {T}
+            edge from parent
+        }
+        edge from parent
+        node[left]  {$\frac{11}{20}$}
+    }
+    child {
+        node {\tt0}
+        child {
+                node {\tt1}
+                child {
+                    node {H}
+                    edge from parent
+                }
+                edge from parent
+                node[left] {$\frac{5}{20}$}
+            }
+            child {
+                node {\tt0}
+                child {
+                    node {\tt1}
+                    child {
+                        node {W}
+                        edge from parent
+                    }
+                    edge from parent
+                    node[left] {$\frac{3}{20}$}
+                }
+                child {
+                    node {\tt0}
+                    child {
+                        node {R}
+                        edge from parent
+                    }
+                    edge from parent
+                    node[right] {$\frac{1}{20}$}
+                }
+                edge from parent
+                node[right] {$\frac{4}{20}$}
+            }
+        edge from parent
+        node[right] {$\frac{9}{20}$}
+    };
+\end{tikzpicture}
+\caption{Kodierung durch Traversierung} \label{fig:HKOD}
+\end{figure}
 
 \subsection{Dekodierung}
+
 Auch für die Dekodierung wird der Huffman-Baum verwendet. Dazu muss der
-Dekodierer die Häufigkeitsverteilung der Quellsymbole kennen
+Dekodierer die Häufigkeitsverteilung der Quellsymbole kennen.
 
 \subsection{Mittlere Codewort-Länge}
 
-\subsection{Höhe des Baumes}
+
+
+\subsection{Höhe des Huffman-Baums}
 
 Da die Höhe des Huffman-Baumes der maximalen Codewort länge entspricht,
 ist die Berechnung von Interesse.
@@ -244,14 +333,14 @@ die \emph{GNU Multiple Precision Arithmetic Library}\cite{GMP}. Ein Nachteil ist
 der entstehende Overhead, außerdem ist die Verwendung einer solchen Bibliothek
 bei vielen Microcontrollern nicht möglich.
 
-Eine weitere Methode gegen das Überlaufproblem ist das Prüfen auf einen
-möglichen Überlauf wenn ein Häufigkeitszähler inkrementiert wird. Würde durch
-das Inkrementieren eines Zählers ein Überlauf entstehen, werden alle
-Häufigkeitszähler neu skaliert. Dafür werden zunächst die Häufigkeitszähler
-aller Blätter des Huffman-Baums durch 2 dividiert, was einer einfachen
-Rechtsshift-Operation enstpricht. Dann werden von den Blättern ausgehend bis zu
-Wurzel die Zähler aller Zwischenknoten mit der Summe der Kinderknoten
-aktualisiert.
+Eine weitere Möglichkeit ist das Prüfen auf einen möglichen Überlauf
+wenn ein Häufigkeitszähler inkrementiert wird. Würde durch das
+Inkrementieren eines Zählers ein Überlauf entstehen, werden alle
+Häufigkeitszähler neu skaliert. Dafür werden zunächst die
+Häufigkeitszähler aller Blätter des Huffman-Baums durch 2 dividiert,
+was einer einfachen Rechtsshift-Operation enstpricht. Dann werden von
+den Blättern ausgehend bis zu Wurzel die Zähler aller Zwischenknoten
+mit der Summe der Kinderknoten aktualisiert.
 
 Da durch die Integer-Divison Genauigkeit verloren geht, kann es passieren, dass
 der resultierende Baum kein Huffman-Baum mehr ist. Die Lösung dafür ist die

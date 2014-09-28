@@ -8,7 +8,7 @@
 \usepackage{url}
 \usepackage{tikz}
 \usepackage[hidelinks]{hyperref}
-\usetikzlibrary{trees}
+\usetikzlibrary{trees,calc}
 
 \newcommand{\Frac}[2]{\frac{\displaystyle #1}{\displaystyle #2}}
 \newlength{\textwd}
@@ -49,15 +49,19 @@
 \evensidemargin 0cm
 
 \tikzset{
-grow=left,
-level 1/.style={sibling distance=5cm, level distance=3.0cm},
-level 2/.style={sibling distance=3cm, level distance=4.0cm},
-level 3/.style={sibling distance=2cm, level distance=4.0cm},
+grow=down,
+level 1/.style={sibling distance=2.5cm, level distance=1.0cm},
+level 2/.style={sibling distance=1cm, level distance=1.0cm},
+level 3/.style={sibling distance=1cm, level distance=1.5cm},
+edge from parent path={
+(\tikzparentnode) |-
+($(\tikzparentnode)!0.5!(\tikzchildnode)$) -|
+(\tikzchildnode)}
 }
 
 % Define styles for bags and leafs
-\tikzstyle{bag} = [text width=4em, text centered]
-\tikzstyle{end} = [circle, minimum width=3pt,fill, inner sep=0pt]
+\tikzstyle{bag} = [text width=8em, text centered]
+\tikzstyle{cicleend} = [circle, minimum width=3pt, fill, inner sep=0pt]
 
 \begin{document}
 
@@ -140,40 +144,40 @@ Der Huffman-Baum wird von unten nach oben Aufgebaut, also von den Blättern zur
 Wurzel. Jedes Blatt steht für ein Quellsymbol. Aus dem Pfad zu einem Blatt lässt
 sich das Codewort für dieses Blatt ableiten.
 
+% sibling-property
+
 
 \begin{figure}
 \centering
 \begin{tikzpicture}
-\node[bag] {}
+\node {}
     child {
-        node[bag] {Bag 2}
             child {
-                node[end, label=left:{test}] {}
+                node {A}
                 edge from parent
-                node[below]  {$\frac{4}{9}$}
+                node[left]  {$\frac{4}{9}$}
             }
             child {
-                node[end, label=left:{test}] {}
+                node {B}
                 edge from parent
-                node[below]  {$\frac{5}{9}$}
+                node[right]  {$\frac{5}{9}$}
             }
             edge from parent
-            node[below]  {$\frac{4}{7}$}
+            node[left]  {$\frac{4}{7}$}
     }
     child {
-        node[bag] {Bag 2}
         child {
-                node[end, label=left:{test2}] {}
+                node {C}
                 edge from parent
-                node[below]  {$\frac{3}{9}$}
+                node[left] {$\frac{3}{9}$}
             }
             child {
-                node[end, label=left:{test3}] {}
+                node {D}
                 edge from parent
-                node[below]  {$\frac{6}{9}$}
+                node[right] {$\frac{6}{9}$}
             }
         edge from parent
-        node[below]  {$\frac{3}{7}$}
+        node[right] {$\frac{3}{7}$}
     };
 \end{tikzpicture}
 \caption{M1} \label{fig:M1}
@@ -222,17 +226,17 @@ Fall divergieren können.
 
 \subsection{Überlauf der Häufigkeitszähler}
 
-Die Häufigkeitszähler werden bei der adaptiven Huffman-Kodierung als Integer
-gespeichert. Abhängig von der Datenmenge kann es passieren, dass die auftretende
-Häufigkeit eines Symbols die Grenze des darstellbaren Zahlenbereiches
-überschreitet -- es kommt zu einem Integerüberlauf.
+Die Häufigkeitszähler für das Auftreten von Quellsymbolen werden bei der
+adaptiven Huffman-Kodierung als Integer gespeichert. Abhängig von der Datenmenge
+kann es passieren, dass die auftretende Häufigkeit eines Symbols die Grenze des
+darstellbaren Zahlenbereiches überschreitet -- es kommt zu einem
+Integerüberlauf.
 
 Der darstellbare Zahlenbereich für Integer ist abhängig von der verwendeten
 Hardware. Mit modernen 64-Bit Rechnerarchitekturen ist die Wahrscheinlichkeit
-für einen Überlauf heute deutlich geringer, die Möglichkeit sollte dennoch
-nicht vernachlässigt werden. Viele Microcontroller rechnen auch heute noch
-standardmäßig mit 8- oder 16-Bit-Integern, die nur 256 bzw. 65536 Werte
-darstellen können.
+für einen Überlauf heute deutlich geringer, die Möglichkeit sollte dennoch nicht
+vernachlässigt werden. Viele Microcontroller rechnen standardmäßig mit 8- oder
+16-Bit-Integern, die nur 256 bzw. 65536 Werte darstellen können.
 
 Eine Möglichkeit zu Verhinderung der Überläufe wäre die Benutzung einer
 Biblitothek zur Speicherung von Integern mit dynamischer Größe, wie zum Beispiel
@@ -240,13 +244,28 @@ die \emph{GNU Multiple Precision Arithmetic Library}\cite{GMP}. Ein Nachteil ist
 der entstehende Overhead, außerdem ist die Verwendung einer solchen Bibliothek
 bei vielen Microcontrollern nicht möglich.
 
-Eine einfache Methode ist das Prüfen auf einen möglichen Überlauf wenn der
-Häufigkeitszähler inkrementiert wird. Würde durch das inkrementieren ein
-Überlauf entstehen, werden alle Häufigkeitszähler neu skaliert, indem sie durch
-2 dividiert werden, was einer einfachen Right-Shift-Operation enstpricht. Dabei
-wird von den Blättern des Huffman-Baums gestartet, bei ihnen wird der Zähler
-halbiert. Dann wird jeder Elternknoten mit der Summe der Kinderknoten
-aktuallisiert.
+Eine weitere Methode gegen das Überlaufproblem ist das Prüfen auf einen
+möglichen Überlauf wenn ein Häufigkeitszähler inkrementiert wird. Würde durch
+das Inkrementieren eines Zählers ein Überlauf entstehen, werden alle
+Häufigkeitszähler neu skaliert. Dafür werden zunächst die Häufigkeitszähler
+aller Blätter des Huffman-Baums durch 2 dividiert, was einer einfachen
+Rechtsshift-Operation enstpricht. Dann werden von den Blättern ausgehend bis zu
+Wurzel die Zähler aller Zwischenknoten mit der Summe der Kinderknoten
+aktualisiert.
+
+Da durch die Integer-Divison Genauigkeit verloren geht, kann es passieren, dass
+der resultierende Baum kein Huffman-Baum mehr ist. Die Lösung dafür ist die
+vollständige Neuerstellung des Huffman-Baums nach jeder Skalierung. Aber Selbst
+bei der Verwendung von 32-Bit Integern sollte dies nicht sehr häufig passieren.
+
+% Beispiel
+
+Die Skalierung der Zähler hat eine Auswirkung auf die Komprimierung, denn die
+Symbole, die nach der Skalierung gelesen werden, haben eine größere Auswirkung
+auf die Häufigkeitszähler, als die Symbole vorher, deren Wert halbiert wurde.
+Dies kann sogar einen Vorteil haben, denn die neu gelesenen Symbole können eine
+größere Abhängigkeit von den kurz vohrer aufgetretenen Symbolen haben als von
+Symbolen, die weiter in der Vergangenheit aufgetreten sind.
 
 \subsection{Überlauf der Codeworte}
 

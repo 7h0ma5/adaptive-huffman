@@ -8,6 +8,8 @@
 \usepackage{dcolumn}
 \usepackage{url}
 \usepackage{tikz}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage[hidelinks]{hyperref}
 \usetikzlibrary{trees,calc}
 
@@ -40,20 +42,19 @@
 \newtheorem{Def}[Cor]{Definition}
 \theoremheaderfont{\scshape}
 
-\newcolumntype{.}{D{.}{.}{-1}}
-
 \pagestyle{headings}
 
 \textwidth 15cm
-\textheight 23cm
+\textheight 22cm
 \oddsidemargin 1cm
 \evensidemargin 0cm
 
 \tikzset{
 grow=down,
-level 1/.style={sibling distance=2.5cm, level distance=1.0cm},
-level 2/.style={sibling distance=2.0cm, level distance=1.0cm},
-level 3/.style={sibling distance=1.5cm, level distance=1.0cm},
+level 1/.style={sibling distance=2.5cm, level distance=1.3cm},
+level 2/.style={sibling distance=2.0cm, level distance=1.3cm},
+level 3/.style={sibling distance=1.5cm, level distance=1.3cm},
+level 4/.style={sibling distance=1.0cm, level distance=1.3cm},
 edge from parent path={
 (\tikzparentnode) |-
 ($(\tikzparentnode)!0.5!(\tikzchildnode)$) -|
@@ -65,6 +66,18 @@ edge from parent path={
 \tikzstyle{cicleend} = [circle, minimum width=3pt, fill, inner sep=0pt]
 
 \renewcommand*\ttdefault{txtt}
+
+\usepackage{parskip}
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\usepackage{titlesec}
+\titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
 
 \begin{document}
 
@@ -96,149 +109,302 @@ edge from parent path={
 \listoffigures
 \newpage
 \pagestyle{empty}
-\
 \newpage
 \pagestyle{headings}
 
 
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{2ex plus 0.5ex minus 0.2ex}
+\newcommand{\sectionbreak}{\clearpage}
 
 % Literaturverzeichnis wie in der .bib Datei ordnen
 \nocite{*}
 
 \section{Einleitung}
-
 Bei einer Datenübertragung mit eingeschränkter Bandbreite ist eine
 Komprimierung der Daten von großem Vorteil.
 
+Ein Symbol kann ein eine Bitfolge, ein Buchstabe, ein Wort oder auch
+eine Kombination von Wörtern sein. Wie ein Symbol definiert ist, ist
+vom Anwendungsfall abhängig. Es kann beispielsweise mehr Sinn machen,
+bei einem Text die Wörter als Symbole zu definieren, als die
+Buchstaben. Die Menge an Symbolen, die für eine Datenmenge
+exisitiert, wird als Alphabet bezeichnet.
+
 Ein Problem der Huffman-Kodierung ist, dass die Wahrscheinlichkeiten
-der Quellsymbole vor der Kodierung bekannt sein müssen. Wenn die zu
-komprimierenden Daten lokal verfügbar sind, ist es möglich, zuerst die
-Häufigkeiten der vorkommenden Quellsymbole zu analysieren und dann die
-Daten zu kodieren. Handelt es sich aber um einen laufenden Datenstrom,
-ist es nicht möglich die Häufig im vorraus zu ermitteln. Eine Lösung
-für dieses Problem bietet die adaptive Huffman-Kodierung, die sich
-laufend an die Häufigkeiten der Quellsymbole anpasst.
+der zu kodierenden Symbole vor der Kodierung bekannt sein müssen. Wenn
+die zu komprimierenden Daten lokal verfügbar sind, ist es möglich,
+zuerst die Häufigkeiten der vorkommenden Symbole zu analysieren und
+dann die Daten zu kodieren. Handelt es sich aber um einen laufenden
+Datenstrom, ist es nicht möglich die Häufigkeiten im vorraus zu
+ermitteln. Eine Lösung für dieses Problem bietet die adaptive
+Huffman-Kodierung, die sich laufend an die Häufigkeiten der Symbole
+anpasst.
+
+%Bei der Konstruktion von Codes mit variabler Länge sind zwei Punkte
+%wichtig, die Codewörter sollten eindeutig sein und sie sollten den
+%Symbolen so zugewiesen werden, dass die Codewörter in der
+%resultierende Kodierung die minimale mittlere Länge haben.
 
 \section{Huffman-Kodierung}
-
-Dieser Abschnitt gibt eine Einführung in die Hufmann-Kodierung, auf
-welche die adaptive Huffman-Kodierung aufbaut. Der Abschnitt basiert
-auf \cite[S.  214-228]{Salomon:2010}.
+Dieser Abschnitt gibt eine Einführung in die Hufmann-Kodierung, welche
+die Grundlage für die adaptive Huffman-Kodierung ist. Der Abschnitt
+basiert aufsind hauptsächlich \cite{Salomon:2010} und
+\cite{Sayood:2006}.
 
 Die Huffman-Kodierung ist eine stochastische Kodierung, das heißt, sie
-kodiert Daten basierend auf der Häufigkeit der vorkommenden
-Quellsymbole. Häufig vorkommenden Symbolen wird ein kürzeres Codewort
-zugewiesen als selteneren Symbolen.
+kodiert Daten basierend auf der Häufigkeit der vorkommenden Symbole
+des Eingabealphabets. Es gibt Fälle, in denen durch die
+Huffman-Kodierung keine Komprimierung erziehlt werden kann, zum
+Beispiel bei Symbolen mit gleicher Häufigkeit, da es sich dabei
+stochastisch gesehen um Zufallsdaten handelt. Beispielsweise ist eine
+Zeichenkette $a_1a_1{\dots}a_1a_2a_2{\dots}a_2a_3a_3{\dots}a_3$ mit
+der Huffman-Kodierung nicht komprimierbar. Bei einem Alphabet, welches
+nur aus zwei Symbolen besteht, kann die Huffman-Kodierung auch nicht
+zur Komprimierung verwendet werden. Einem Symbol würde in diesem Fall
+entweder die {\tt1} oder die {\tt0} als Codewort zugewiesen werden.
+Da die Huffman-Kodierung keine Codewörter vergeben kann, die kürzer
+als ein Bit sind, ist es nicht möglich, dieses Alphabet zu verbessern.
 
-Es gibt Fälle, in denen durch die Huffman-Kodierung keine
-Komprimierung erziehlt werden kann. Zum Beispiel mit den Quellsymbolen
-0 und 1 und der Folge {\tt01010101}. Beide Quellsymbole haben eine
-Wahrscheinlichkeit von 50\%, deshalb bekommen sie beide ein Codewort
-der Länge 1 zugewiesen.
+Der Codewörter, die bei der Huffman-Kodierung erzeugt werden, sind
+immer präfixfrei, das heißt kein Codewort ist Präfix eines anderen
+Codewortes. Das macht es möglich, die erzeugten Codewörter ohne
+Trennzeichen direkt hintereinander zu schreiben und beim Dekodieren
+eindeutig zu erkennen.
+
+Die Huffman-Kodierung basiert auf zwei Beobachtungen über optimale
+präfixfreie Codes:
+
+\begin{enumerate}
+\item In einem optimalen Code haben die Symbole, die häufiger
+  auftreten, also eine höhere Auftrittswahrscheinlichkeit haben,
+  kürzere Codewörter als Symbole, die seltener auftreten.
+\item In einem optimalen Code haben die Codewörter für die beiden
+  Symbole, die am seltensten auftreten, die selbe Länge.
+\end{enumerate}
+
+Die erste Beobachtung ist offensichtlich korrekt. Wäre die Länge des
+Codeworts eines seltener auftretenden Symbols kürzer als die eines
+häufiger auftretenden Symbols, dann wäre die mittlere Länge eines
+Codeworts länger, weshalb ein solcher Code nicht optimal sein kann.
+
+Die zweite Beobachtung lässt sich einfach zeigen. Angenommen es gäbe
+einen optimalen Code, bei dem die zwei am seltensten auftretenden
+Symbole Codewörter mit unterschiedlicher Länge mit dem
+Längenunterschied $k$ zugeweisen bekommen. Weil es sich um einen
+präfixfreien Code handelt, kann das kürzere Codewort kein Präfix des
+längeren Codeworts sein. Das bedeutet man kann die letzten $k$ Bits
+des längeren Codeworts wegfallen lassen und die beiden Codewörter
+wären immer noch eindeutig. Da es sich bei den Symbolen der zwei
+Codewörter um die am seltensten Symbole eines Alphabets handelt, gibt
+es keine längeren Codewörter. Aus diesem Grund ist es nicht möglich,
+dass das gekürzte Codewort Präfix eines längeren Codeworts
+wird. Außerdem ensteht durch das Entfernen dieser $k$ Bits ein neuer
+Code, der eine kürzere mittlere Codewortlänge hat und somit besser ist
+als der Ausgangscode. Das ist ein Widerspruch zu der Annahme, dass es
+sich bei dem Ausgangscode um einen optimalen Code handelt. Die zweite
+Feststellung trifft somit auch zu.
+
+Die Huffman-Kodierung erweitert diese Beobachtungen um die Bedingung,
+dass sich die Codewörter der zwei seltensten Symbole nur beim letzten
+Bit unterscheiden dürfen.
 
 \subsection{Huffman-Baum}
-
-Um Daten mit der Huffman-Kodierung zu komprimieren muss zuerst der
-sogenannte \emph{Huffman-Baum} aufgebaut werden. Es handelt sich dabei
-um einen Binärbaum, der einigen Bedingungen unterliegt.
-
-Der Huffman-Baum wird von unten nach oben aufgebaut, also von den
-Blättern zur Wurzel. Jedes Blatt steht für ein Quellsymbol. Aus dem
-Pfad zu einem Blatt lässt sich das Codewort für dieses Blatt ableiten.
+Um den Symbolen des Eingangsalphabets Codewörter zuzuweisen, wird der
+sogenannte \emph{Huffman-Baum} aufgebaut. Es handelt sich dabei um
+einen Binärbaum, damit die entstehenden Codewörter binär sind.
 
 Um den Huffman-Baum aufzubauen muss die Wahrscheinlichkeitsverteilung
-für die Symbole des Eingabealphabetes bekannt sein. Die
-Wahrscheinlichkeiten sind entweder vorher bekannt, zum Beispiel für
-eine Sprache, oder sie müssen in einem zusätzlichen Durchgang bestimmt
-werden.
+für die Symbole des Eingabealphabets bekannt sein. Die
+Wahrscheinlichkeiten können entweder geschätzt werden, wie zum
+Beispiel mit den Buchstabenhäufigkeiten einer Sprache, oder sie müssen
+in einem zusätzlichen Durchgang bestimmt werden.
 
-In Tabelle \ref{tab:HBEX} ist eine solche Verteilung dargestellt.
+Als nächstes wird die Liste der Symbole nach Häufigkeiten geordnet.
+Dann Huffman-Baum wird von unten nach oben aufgebaut, also von den
+Blättern zur Wurzel. Es werden immer die beiden Symbole mit der
+niedrigsten Auftrittswahrscheinlichkeit aus der Liste entfernt und ein
+Knoten erstellt, der diese beiden Symbole als Nachfolger hat. Dieser
+Knoten wird dann als Hilfssymbol mit der summierten Wahrscheinlichkeit
+wieder in der Liste eingeordnet. Der Huffman-Baum ist fertig, wenn die
+Liste auf ein Hilfssymbol reduziert ist.
 
+Beim Erstellen des Huffman-Baums gibt verschiedene Möglichkeiten, wenn
+es Symbole mit den gleichen Wahrscheinlichkeiten gibt. Die Wahl einer
+dieser Möglichkeiten hat einen Einfluss auf die erzeugten Codewörter,
+aber nicht auf die mittlere Länge des Codes.
 
 \begin{table}[h]
 \centering
-\caption{Beispiel einer Häufkeitsverteilung}
+\caption{Beispiel für eine Häufigkeitsverteilung}
 
-\begin{tabular}{c|c|c}
-Symbol & Häufigkeit & Wahrscheinlichkeit \\ \hline
-A & 96  & 0.32 \\
-B & 9   & 0.03 \\
-C & 24  & 0.08 \\
-D & 36  & 0.12 \\
-E & 135 & 0.45 \\
-\end{tabular}
+\begin{subtable}[t]{0.3\textwidth}
+  \centering
+  \caption{Ausgangstabelle}
+  \begin{tabular}{c|r|r}
+    $a_i$ & $H(a_i)$ & $P(a_i)$ \\ \hline
+    A & 40   & 0.20 \\
+    B & 4    & 0.02 \\
+    C & 16   & 0.08 \\
+    D & 20   & 0.10 \\
+    E & 120  & 0.60 \\
+  \end{tabular}
+  \vspace{3ex}
+  \label{tab:HBEX0}
+\end{subtable}
+\begin{subtable}[t]{0.3\textwidth}
+  \centering
+  \caption{Schritt 1}
+  \begin{tabular}{c|c}
+    $a_i$ & $P(a_i)$ \\ \hline
+    E & 0.60 \\
+    A & 0.20 \\
+    D & 0.10 \\
+    C & 0.08 \\
+    B & 0.02 \\
+  \end{tabular}
+  \vspace{3ex}
+  \label{tab:HBEX1}
+\end{subtable}
+\begin{subtable}[t]{0.3\textwidth}
+  \centering
+  \caption{Schritt 2}
+  \begin{tabular}{c|c}
+    $a_i$ & $P(a_i)$ \\ \hline
+    E & 0.60 \\
+    A & 0.20 \\
+    D & 0.10 \\
+    \{C, B\} & 0.10 \\ \\
+  \end{tabular}
+  \vspace{3ex}
+  \label{tab:HBEX2}
+\end{subtable}
+\begin{subtable}[t]{0.3\textwidth}
+  \centering
+  \caption{Schritt 3}
+   \begin{tabular}{c|c}
+    $a_i$ & $P(a_i)$ \\ \hline
+    E & 0.60 \\
+    A & 0.20 \\
+    \{B, C, D\} & 0.20 \\
+  \end{tabular}
+  \label{tab:HBEX3}
+\end{subtable}
+\begin{subtable}[t]{0.3\textwidth}
+  \centering
+  \caption{Schritt 4}
+   \begin{tabular}{c|c}
+    $a_i$ & $P(a_i)$ \\ \hline
+    E & 0.60 \\
+    \{A, B, C, D\} & 0.40 \\ \\
+  \end{tabular}
+  \label{tab:HBEX4}
+\end{subtable}
+\begin{subtable}[t]{0.3\textwidth}
+  \centering
+  \caption{Schritt 5}
+  \begin{tabular}{c|c}
+    $a_i$ & $P(a_i)$ \\ \hline
+    \{A, B, C, D, E\} & 1.00 \\ \\ \\
+  \end{tabular}
+  \label{tab:HBEX5}
+\end{subtable}
 \label{tab:HBEX}
 \end{table}
+
+Am besten lässt sich die Erzeugung eines Huffman-Baums mit Hilfe eines
+Beispiels verstehen. In Tabelle~\ref{tab:HBEX0} ist ein Beispiel einer
+Häufigkeitsverteilung dargestellt, mit den Symbolen $\{a_i \mid i \in
+[1, 5]\}$, den absoluten Häufigkeiten der Symbole, $H(a_i)$, und die
+Wahrscheinlichkeiten der Symbole, $P(a_i)$.
+
+Nachdem alle Symbole nach den Wahrscheinlichkeiten geordnet sind,
+ergibt sich Tabelle~\ref{tab:HBEX1}. Die am seltensten Vorkommenden
+Symbole sind $C$ und $B$, also wird für $C$ und $B$ jeweils ein
+Blattknoten erzeugt. Dann wird ein Elternknoten $\{C, B\}$ erzeugt,
+der die summierte Wahrscheinlichkeit beider Symbole von $0.10$
+besitzt. Für diesen Knoten wird das Hilfssymbol $\{C, B\}$ zurück in
+die Liste geschrieben und es ergibt sich Tabelle~\ref{tab:HBEX2}.
+
+Nun sind die seltensten Symbole in der Liste das Hilfssymbol $\{C,
+B\}$ und das Symbol $D$. Für $D$ wird wieder ein Blattknoten erzeugt,
+für $\{C, B\}$ existiert bereits ein Knoten. Dann wird ein
+Elternknoten $\{B, C, D\}$ erzeugt, der als Nachfolger den Blattknoten
+für $D$ und den Knoten $\{C, B\}$ hat. Dieser wird als Hilfssymbol
+$\{B, C, D\}$ mit der summierten Wahrscheinlichkeit von $0.20$ in die
+Liste geschrieben und es ergibt sich Tabelle~\ref{tab:HBEX3}.
+
+Der gleiche Prozess wird noch zwei mal wiederholt (siehe
+Tabelle~\ref{tab:HBEX4} und \ref{tab:HBEX5}), dann existiert nur noch
+ein Hilfssymbol in der Tabelle. Der Huffman-Baum ist nun fertig und in
+Abbildung~\ref{fig:HBEX} dargestellt.
 
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}
-\node {}
+\node {\{A, B, C, D, E\}}
+child {
+  node {E}
+  edge from parent
+  node[left] {\scriptsize $0.60$}
+}
+child {
+  node {\{A, B, C, D\}}
+  child {
+    node {A}
+    edge from parent
+    node[left] {\scriptsize $0.20$}
+  }
+  child {
+    node {\{B, C, D\}}
     child {
-        child {
-            node {A}
-            edge from parent
-            node[left]  {$\frac{4}{9}$}
-        }
-        child {
-            node {B}
-            edge from parent
-            node[right]  {$\frac{5}{9}$}
-        }
-        edge from parent
-        node[left]  {$\frac{4}{7}$}
+      node {D}
+      edge from parent
+      node[left] {\scriptsize $0.10$}
     }
     child {
-        child {
-                node {C}
-                edge from parent
-                node[left] {$\frac{3}{9}$}
-            }
-            child {
-                node {D}
-                edge from parent
-                node[right] {$\frac{6}{9}$}
-            }
+      node {\{C, B\}}
+      child {
+        node {C}
         edge from parent
-        node[right] {$\frac{3}{7}$}
-    };
+        node[left] {\scriptsize $0.08$}
+      }
+      child {
+        node {B}
+        edge from parent
+        node[right] {\scriptsize $0.02$}
+      }
+      edge from parent
+      node[right] {\scriptsize $0.10$}
+    }
+    edge from parent
+    node[right] {\scriptsize $0.20$}
+  }
+  edge from parent
+  node[right] {\scriptsize $0.40$}
+};
 \end{tikzpicture}
-\caption{Beispiel eines Huffman-Baums} \label{fig:HBEX}
+\caption{Huffman-Baum für die Verteilung aus Tabelle~\ref{tab:HBEX}} \label{fig:HBEX}
 \end{figure}
 
 % sibling-property
 
 \subsection{Kodierung}
+Nachdem der Huffman-Baum erzeugt wurde, kann er verwendet werden, um
+die Codewörter für die Symbole zu bestimmen. Aus dem Pfad zu einem
+Blatt lässt sich das Codewort für dieses Blatt ableiten.
 
-Nachdem der Huffman-Baum generiert wurde, kann er zur Kodierung von
-Daten verwendet werden. Um eine Folge von Quellsymbolen zu kodieren,
-wird der Baum vom Blatt des Quellsymbols zur Wurzel traversiert.
-
-Die Codewörter, die in diesem Prozess entstehen haben eine variable
-Länge, die davon abhängig ist, wie häufig das zugehörige Symbol in den
-Ausgangsdaten auftritt.
-
-Die Kodierung mit dem Huffman-Baum erzeugt immer eine präfixfreie
-Kodierung, das heißt kein Codewort ist Präfix eines Codewortes. Das
-macht es möglich, die erzeugten Codewörter ohne Trennsymbole direkt
-hintereinander zu schreiben.
-
-In Abbildung \ref{fig:HKOD} ist ein Huffman-Baum mit den Quellsymbolen
+In Abbildung~\ref{fig:HKOD} ist ein Huffman-Baum mit den Symbolen
 \emph{H}, \emph{R}, \emph{T} und \emph{W} abgebildet. Um das Wort
-\emph{RWTH} zu kodieren, wird nun für jedes Symbol der Baum vom Blatt
-dieses Symbols zur Wurzel durchgegangen.
-
-Dabei wird das Codewort gebildet, indem bei jedem Knoten, der auf dem
-Weg erreicht wird, eine {\tt1} an das Codewort gehängt, wenn der
-vorherige Knoten der linke Nachfolger war, und eine {\tt0} an das
-Codewort gehängt, wenn der vorherige Knoten der rechte Nachfolger war.
+\emph{RWTH} zu kodieren, wird nun für jedes Symbol der Pfad von der
+Wurzel bis zu dem Blatt für dieses Symbol durchschritten. Dabei wird das
+Codewort gebildet, indem bei jedem Knoten, der auf dem Weg erreicht
+wird, eine {\tt1} an das Codewort gehängt, wenn der Knoten der linke
+Nachfolger des vorherigen ist, und eine {\tt0} angehängt, wenn der
+Knoten der rechte Nachfolger ist.
 
 Für \emph{R} erhält man so das Codewort {\tt000}, für \emph{W} das
-Codewort {\tt100}, für \emph{T} das Codewort {\tt1} und für \emph{H}
-das Codewort \emph{\tt10}. Insgesamt wird \emph{RWTH} also zu
-{\tt000100110} kodiert.
+Codewort {\tt001}, für \emph{T} das Codewort {\tt1} und für \emph{H}
+das Codewort \emph{\tt01}. Insgesamt wird \emph{RWTH} also zu
+{\tt000001101} kodiert.
 
 % Der beste Code ist der mit der kleinsten Varianz, da die Buffer nicht groß sein müssen
 
@@ -293,31 +459,41 @@ das Codewort \emph{\tt10}. Insgesamt wird \emph{RWTH} also zu
         node[right] {$\frac{9}{20}$}
     };
 \end{tikzpicture}
-\caption{Kodierung mit dem Huffman-Baum} \label{fig:HKOD}
+\caption{Kodierung mit Hilfe eines Huffman-Baums} \label{fig:HKOD}
 \end{figure}
 
 \subsection{Dekodierung}
 
-Auch für die Dekodierung wird der Huffman-Baum verwendet. Dazu muss
-der Dekodierer die Häufigkeitsverteilung der Quellsymbole kennen.
+Die Dekodierung kann mit Hilfe des Huffman-Baums durchgeführt
+werden. Damit der Dekodierer einen Huffman-Baum erzeugen kann, muss
+entweder die Häufigkeitsverteilung oder der Huffman-Baum zusammen mit
+den kodierten Daten gespeichert bzw. übertragen werden. Wenn dem
+Dekoder nur die Häufigkeitsverteilung bekannt ist, muss er den
+Huffman-Baum nach exakt dem gleichen Prinzip aufbauen, wie der
+Kodierer, damit der selbe Huffman-Baum ensteht und die Daten korrekt
+dekodiert werden können.
 
-\subsection{Mittlere Codewort-Länge}
+Die kodierten Daten werden ähnlich wie beim Kodieren durch das
+traviersieren des Huffman-Baums dekodiert. Der Dekodierer startet bei
+der Wurzel und geht für jedes gelesene Bit entweder zum linken oder
+rechten Nachfolger des aktuellen Knotens. Sobald ein Blatt des Baums
+erreicht wird, ist ein Symbol fertig dekodiert, der Dekodierer gibt
+das im Blatt gespeicherte Symbol aus und kehrt zurück zur Wurzel des
+Baums und verarbeitet das nächste Bit.
 
+%\subsection{Mittlere Codewort-Länge}
 
-
-\subsection{Höhe des Huffman-Baums}
-
-Da die Höhe des Huffman-Baumes der maximalen Codewort länge
-entspricht, ist die Berechnung von Interesse.
+%\subsection{Höhe des Huffman-Baums}
+%Da die Höhe des Huffman-Baumes der maximalen Codewort länge
+%entspricht, ist die Berechnung von Interesse.
 
 \section{Adaptive Huffman-Kodierung}
-
 Die adaptive Huffman-Kodierung aktualisiert laufend den Huffman-Baum.
 
 Da anfangs noch keine Häufigkeiten der auftauchenden Wörter Symbole
 bekannt sind, wird mit einem leeren Baum begonnen. Mit jeden neuen
 Wort wird der Baum entsprechend der neuen
-Wahrscheinlichkeitsverteilung aktualisiert. Dieser Schritt wird auch
+Häufigkeitsverteilung aktualisiert. Dieser Schritt wird auch
 im Dekodierer durchgeführt, so dass eine Übertragung des Huffman-Baums
 nicht nötig ist.
 
@@ -339,8 +515,7 @@ können.
 % Beispiel
 
 \subsection{Überlauf der Häufigkeitszähler}
-
-Die Häufigkeitszähler für das Auftreten von Quellsymbolen werden bei
+Die Häufigkeitszähler für das Auftreten von Symbolen werden bei
 der adaptiven Huffman-Kodierung als Integer gespeichert. Abhängig von
 der Datenmenge kann es passieren, dass die auftretende Häufigkeit
 eines Symbols die Grenze des darstellbaren Zahlenbereiches
@@ -356,7 +531,7 @@ nur 256 bzw. 65536 Werte darstellen können.
 Eine Möglichkeit zu Verhinderung der Überläufe wäre die Benutzung
 einer Biblitothek zur Speicherung von Integern mit dynamischer Größe,
 wie zum Beispiel die \emph{GNU Multiple Precision Arithmetic
-  Library}\cite{GMP}. Ein Nachteil ist der entstehende Overhead,
+ Library}\cite{GMP}. Ein Nachteil ist der entstehende Overhead,
 außerdem ist die Verwendung einer solchen Bibliothek bei vielen
 Microcontrollern nicht möglich.
 
@@ -364,15 +539,15 @@ Eine weitere Möglichkeit ist das Prüfen auf einen möglichen Überlauf
 wenn ein Häufigkeitszähler inkrementiert wird. Würde durch das
 Inkrementieren eines Zählers ein Überlauf entstehen, werden alle
 Häufigkeitszähler neu skaliert. Dafür werden zunächst die
-Häufigkeitszähler aller Blätter des Huffman-Baums durch 2 dividiert,
-was einer einfachen Rechtsshift-Operation enstpricht. Dann werden von
-den Blättern ausgehend bis zu Wurzel die Zähler aller Zwischenknoten
-mit der Summe der Kinderknoten aktualisiert.
+Häufigkeitszähler aller Blätter des Huffman-Baums halbiert, was einer
+einfachen Rechtsshift-Operation enstpricht. Dann werden von den
+Blättern ausgehend bis zu Wurzel die Zähler aller Zwischenknoten mit
+der Summe der Kinderknoten aktualisiert.
 
 Da durch die Integer-Divison Genauigkeit verloren geht, kann es
 passieren, dass der resultierende Baum kein Huffman-Baum mehr ist. Die
 Lösung dafür ist die vollständige Neuerstellung des Huffman-Baums nach
-jeder Skalierung. Aber Selbst bei der Verwendung von 32-Bit Integern
+jeder Skalierung. Aber selbst bei der Verwendung von 32-Bit Integern
 sollte dies nicht sehr häufig passieren.
 
 % Beispiel
@@ -386,7 +561,6 @@ kurz vohrer aufgetretenen Symbolen haben als von Symbolen, die weiter
 in der Vergangenheit aufgetreten sind.
 
 \subsection{Überlauf der Codeworte}
-
 Wie in Abschnitt xy beschrieben, wird die maximale Länge eines
 Codeworts von der Höhe des Huffman-Baums bestimmt.
 
@@ -396,7 +570,6 @@ Codeworts von der Höhe des Huffman-Baums bestimmt.
 \subsection{Algorithmus von Vitter}
 
 \section{Anwendungen}
-
 In der Praxis wird die Huffman-Kodierung in der adaptiven Variante zum
 Beispiel im Unix-Tool \emph{compact} verwendet. Bei vielen anderen
 Programmen ist die Huffman-Kodierung Teil eines mehrstufigen Prozesses
@@ -417,8 +590,8 @@ Die hier vorgestellten Anwendungsfälle basieren auf den Beispielen aus
 
 Test \cite{Salomon:2010}  \cite{Williams:1991}
 
-\addcontentsline{toc}{section}{Literaturverzeichnis}
 \bibliographystyle{unsrt}
 \bibliography{adaptive_huffman}
+\addcontentsline{toc}{section}{Literaturverzeichnis}
 
 \end{document}

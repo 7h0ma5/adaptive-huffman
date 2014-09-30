@@ -45,7 +45,7 @@
 \pagestyle{headings}
 
 \textwidth 15cm
-\textheight 22cm
+\textheight 22.5cm
 \oddsidemargin 1cm
 \evensidemargin 0cm
 
@@ -126,7 +126,7 @@ besser ausnutzen.
 
 Es gibt eine Vielzahl von Methoden zur Datenkompression, viele der
 Methoden sind für spezielle Anwendungsfälle entwickelt worden. Eine
-Form der Datenkomprimierung ist die Entropiekodierung. Sie komprimiert
+Form der Datenkompression ist die Entropiekodierung. Sie komprimiert
 Daten, indem Bitfolgen aus den Eingabedaten, die sogenannten Symbole,
 mit anderen Bitfolgen, den sogenannten Codewörtern, ersetzt
 werden. Die Komprimierung wird erreicht, indem häufiger vorkommende
@@ -146,9 +146,10 @@ Anwendungen der Huffman-Kodierung, welche in der Praxis meist in der
 adaptiven Variante verwendet wird.
 
 \section{Huffman-Kodierung} \label{sec:huffman}
-Dieser Abschnitt ist eine Einführung in die Hufman-Kodierung, welche
+Dieser Abschnitt ist eine Einführung in die Huffman-Kodierung, welche
 die Grundlage der adaptive Huffman-Kodierung ist. Der Abschnitt
-basiert auf \cite{Salomon:2010} und \cite{Sayood:2006}.
+basiert auf \cite[S. 211 -- 221]{Salomon:2010} und \cite[S. 41 --
+  45]{Sayood:2006}.
 
 Die Huffman-Kodierung ist eine Entropiekodierung, das heißt, sie
 kodiert Daten basierend auf der Häufigkeit der vorkommenden Symbole
@@ -158,7 +159,7 @@ Huffman-Kodierung wurde 1952 von David Huffman entwickelt und ist
 seitdem Gegenstand vieler Forschungsarbeiten.
 
 Es gibt Fälle, in denen durch die Huffman-Kodierung keine
-Komprimierung erziehlt werden kann, zum Beispiel bei Symbolen mit
+Komprimierung erzielt werden kann, zum Beispiel bei Symbolen mit
 gleicher Häufigkeit, da es sich dabei stochastisch gesehen um
 Zufallsdaten handelt. Beispielsweise ist eine Zeichenkette
 $a_1a_1{\dots}a_1a_2a_2{\dots}a_2a_3a_3{\dots}a_3$ mit der
@@ -171,7 +172,7 @@ als ein Bit sind, ist es nicht möglich, dieses Alphabet zu verbessern.
 
 Der Codewörter, die bei der Huffman-Kodierung erzeugt werden, sind
 immer präfixfrei, das heißt kein Codewort ist Präfix eines anderen
-Codewortes. Das macht es möglich, die erzeugten Codewörter ohne
+Codeworts. Das macht es möglich, die erzeugten Codewörter ohne
 Trennzeichen direkt hintereinander zu schreiben und beim Dekodieren
 eindeutig zu erkennen.
 
@@ -194,7 +195,7 @@ Codeworts länger, weshalb ein solcher Code nicht optimal sein kann.
 Die zweite Beobachtung lässt sich einfach zeigen. Angenommen es gäbe
 einen optimalen Code, bei dem die zwei am seltensten auftretenden
 Symbole Codewörter mit unterschiedlicher Länge mit dem
-Längenunterschied $k$ zugeweisen bekommen. Weil es sich um einen
+Längenunterschied $k$ zugewiesen bekommen. Weil es sich um einen
 präfixfreien Code handelt, kann das kürzere Codewort kein Präfix des
 längeren Codeworts sein. Das bedeutet man kann die letzten $k$ Bits
 des längeren Codeworts wegfallen lassen und die beiden Codewörter
@@ -202,7 +203,7 @@ wären immer noch eindeutig. Da es sich bei den Symbolen der zwei
 Codewörter um die am seltensten Symbole eines Alphabets handelt, gibt
 es keine längeren Codewörter. Aus diesem Grund ist es nicht möglich,
 dass das gekürzte Codewort Präfix eines längeren Codeworts
-wird. Außerdem ensteht durch das Entfernen dieser $k$ Bits ein neuer
+wird. Außerdem entsteht durch das Entfernen dieser $k$ Bits ein neuer
 Code, der eine kürzere mittlere Codewortlänge hat und somit besser ist
 als der Ausgangscode. Das ist ein Widerspruch zu der Annahme, dass es
 sich bei dem Ausgangscode um einen optimalen Code handelt. Die zweite
@@ -213,7 +214,7 @@ dass sich die Codewörter der zwei seltensten Symbole nur beim letzten
 Bit unterscheiden dürfen.
 
 \subsection{Huffman-Baum} \label{sec:HTREE}
-Um den Symbolen des Eingangsalphabets Codewörter zuzuweisen, wird der
+Um den Symbolen des Eingabealphabets Codewörter zuzuweisen, wird der
 sogenannte \emph{Huffman-Baum} aufgebaut. Es handelt sich dabei um
 einen Binärbaum, damit die entstehenden Codewörter binär sind.
 
@@ -396,7 +397,7 @@ die Codewörter für die Symbole zu bestimmen. Aus dem Pfad von der
 Wurzel zu einem Blatt lässt sich das Codewort für dieses Blatt
 ableiten, indem linke Abzweige von einem Knoten als ein Bit und rechte
 Abzweige als das andere Bit interpretiert werden. In der Praxis läuft
-der Kodierer bedingt von der Datenstruktur, in der der Baum gespeicher
+der Kodierer bedingt von der Datenstruktur, in der der Baum gespeichert
 ist, vom Knoten zur Wurzel und muss das erhaltene Codewort wieder
 umdrehen.
 
@@ -474,13 +475,13 @@ Die Dekodierung kann mit Hilfe des Huffman-Baums durchgeführt
 werden. Damit der Dekodierer einen Huffman-Baum erzeugen kann, muss
 entweder die Häufigkeitsverteilung oder der Huffman-Baum zusammen mit
 den kodierten Daten gespeichert bzw. übertragen werden. Wenn dem
-Dekoder nur die Häufigkeitsverteilung bekannt ist, muss er den
+Dekodierer nur die Häufigkeitsverteilung bekannt ist, muss er den
 Huffman-Baum nach exakt dem gleichen Prinzip aufbauen, wie der
-Kodierer, damit der selbe Huffman-Baum ensteht und die Daten korrekt
+Kodierer, damit der selbe Huffman-Baum entsteht und die Daten korrekt
 dekodiert werden können.
 
 Die kodierten Daten werden ähnlich wie beim Kodieren durch das
-traviersieren des Huffman-Baums dekodiert. Der Dekodierer startet bei
+traversieren des Huffman-Baums dekodiert. Der Dekodierer startet bei
 der Wurzel und geht für jedes gelesene Bit entweder zum linken oder
 rechten Nachfolger des aktuellen Knotens. Sobald ein Blatt des Baums
 erreicht wird, ist ein Symbol fertig dekodiert, der Dekodierer gibt
@@ -488,7 +489,8 @@ das im Blatt gespeicherte Symbol aus und kehrt zurück zur Wurzel des
 Baums und verarbeitet das nächste Bit.
 
 \section{Adaptive Huffman-Kodierung}
-Der folgende Abschnitt basiert auf \cite{Salomon:2010}.
+Dieser Abschnitt beschreibt die Funktionsweise der adaptiven Huffman-Kodierung. Er basiert auf \cite[S. 234 --
+ S. 238]{Salomon:2010}.
 
 Für die Huffman-Kodierung ist das Wissen über die
 Wahrscheinlichkeitsverteilung notwendig der zu kodierenden Daten
@@ -520,7 +522,7 @@ neuen Wort entsprechend der neuen Häufigkeitsverteilung. Jeder
 Blattknoten besitzt dafür ein Integer-Feld, in dem die absolute
 Häufigkeit des zugehörigen Symbols gespeichert ist. Wenn es sich nicht
 um einen Blattknoten handelt, wird die Summe der Häufigkeiten beider
-Nachfolgerknoten gespeichert. Beim Inkrementieren des
+Nachfolgeknoten gespeichert. Beim Inkrementieren des
 Häufigkeitszählers eines Blattknotens müssen deshalb auch alle
 Elternknoten bis zu Wurzel aktualisiert werden. Es wäre auch
 möglich die Wahrscheinlichkeiten als Fließkommazahlen zu speichern,
@@ -529,15 +531,14 @@ Präzision zu Problemen führen. Aber auch die Speicherung als Integer bringt
 Probleme mit sich, näheres dazu in Abschnitt~\ref{sec:AHCOUNTER}.
 
 Es ist wichtig, dass Kodierer und Dekodierer die auf den Huffman-Baum
-angewandeten Operationen exakt spiegeln und mit Mehrdeutigkeiten auf
+angewandten Operationen exakt spiegeln und mit Mehrdeutigkeiten auf
 die selbe Weise umgehen.
 
 \subsection{Kodierung}
-
 Der Kodierer beginnt das Lesen der Eingabedaten mit einem leeren
 Baum. Das erste gelesene Symbol gibt der Kodierer unkomprimiert aus
 und fügt das Symbol dann in den Baum ein, wodurch ab diesem Punkt ein
-Codewort für dieses Symbol exisitert. Wenn der Kodierer das nächste
+Codewort für dieses Symbol existiert. Wenn der Kodierer das nächste
 mal auf dieses Symbol trifft, wird dieses Codewort ausgegeben und der
 Häufigkeitszähler für dieses Symbol im Huffman-Baum inkrementiert.
 Dabei kann es passieren, dass der Huffman-Baum nicht mehr das
@@ -547,7 +548,6 @@ Abschnitt~\ref{sec:huffman}).  Deshalb muss nach jedem Symbol
 neu angeordnet werden, wodurch sich die Codewörter ändern.
 
 \subsection{Dekodierung}
-
 Der Dekodierer vollzieht exakt die selben Schritte. Wenn er ein
 unkomprimiertes Symbol liest, fügt er dies zu seinem Huffman-Baum
 hinzu und hat so für das nächste Auftreten dieses Symbols das selbe
@@ -574,7 +574,7 @@ Huffman-Baums laufend verändern können. Der natürlichste Weg ist also,
 ein eigenes, leeres Blatt für den Escape-Code in den Huffman-Baum
 einzufügen. Das bringt den Vorteil mit sich, dass sich die Länge des
 Codeworts für den Escape-Code automatisch an die Häufigkeit des
-auftretens anpasst. Je seltener ein zuvor unbekanntes Symbol auftritt,
+Auftretens anpasst. Je seltener ein zuvor unbekanntes Symbol auftritt,
 welches unkomprimiert übertragen werden muss, desto länger ist das
 Codewort für den Escape-Code im Vergleich zu den Codewörtern der
 anderen Symbole. Abbildung~\ref{fig:HESC} zeigt einen Huffman-Baum mit
@@ -678,10 +678,10 @@ child {
 \end{figure}
 
 In Abbildung~\ref{fig:HCORR} ist ein korrekter Huffman-Baum
-dargestellt. Der Knoten unten rechts besitzt mit 4 den kleinsten
-Häufigkeitszähler, die Wurzel mit 60 den Größten. Geht man die Knoten
+dargestellt. Der Knoten unten rechts besitzt mit 7 den kleinsten
+Häufigkeitszähler, die Wurzel mit 70 den Größten. Geht man die Knoten
 von unten rechts nach oben links durch, erhält man die Häufigkeiten 7,
-8, 8, 8, 15, 16, 31, 39 und 60. Diese Folge ist monoton steigend, die
+8, 8, 8, 15, 16, 31, 39 und 70. Diese Folge ist monoton steigend, die
 Bedingung für einen Huffman-Baum trifft für diesen Baum also zu.
 
 Es gibt einen einfachen rekursiven Algorithmus mit dem der
@@ -705,7 +705,7 @@ aufgerufen. Der Algorithmus besteht aus den folgenden drei Schritten:
   führe den Algorithmus auf dem Elternknoten von $X$ aus.
 \end{enumerate}
 
-Abbildung~\ref{fig:HUPD} zeigt zwei Beispiele der Aktualsierung eines
+Abbildung~\ref{fig:HUPD} zeigt zwei Beispiele der Aktualisierung eines
 Huffman-Baums. Das erste Beispiel geht vom Huffman-Baum in
 Abbildung~\ref{fig:HCORR} aus und inkrementiert den Häufigkeitszähler
 für das Symbol $E$. Das Ergebnis der Aktualisierung sieht man in
@@ -831,20 +831,20 @@ Die Häufigkeitszähler für das Auftrittshäufigkeit von Eingabesymbolen
 werden bei der adaptiven Huffman-Kodierung als Integer
 gespeichert. Abhängig von der Datenmenge kann es passieren, dass die
 auftretende Häufigkeit eines Symbols die Grenze des darstellbaren
-Zahlenbereiches überschreitet -- es kommt zu einem Integerüberlauf.
+Zahlenbereichs überschreitet -- es kommt zu einem Integerüberlauf.
 
 Der darstellbare Zahlenbereich für Integer ist abhängig von der
 verwendeten Hardware. Mit modernen 64-Bit Rechnerarchitekturen ist die
 Wahrscheinlichkeit für einen Überlauf heute deutlich geringer, die
 Möglichkeit sollte dennoch nicht vernachlässigt werden. Viele
-Microcontroller rechnen standardmäßig mit 8- oder 16-Bit-Integern, die
+Mikrocontroller rechnen standardmäßig mit 8- oder 16-Bit-Integern, die
 nur 256 bzw. 65536 Werte darstellen können.
 
 Eine Möglichkeit zu Verhinderung der Überläufe wäre die Benutzung
-einer Biblitothek zur Speicherung von Integern mit dynamischer Größe,
+einer Bibliothek zur Speicherung von Integern mit dynamischer Größe,
 wie zum Beispiel die \emph{GNU Multiple Precision Arithmetic
   Library}. Ein Nachteil ist der entstehende Overhead, außerdem ist
-die Verwendung einer solchen Bibliothek bei vielen Microcontrollern
+die Verwendung einer solchen Bibliothek bei vielen Mikrocontrollern
 nicht möglich. \cite{GMP}
 
 Eine weitere Möglichkeit ist das Prüfen auf einen möglichen Überlauf
@@ -852,9 +852,9 @@ wenn ein Häufigkeitszähler inkrementiert wird. Würde durch das
 Inkrementieren eines Zählers ein Überlauf entstehen, werden alle
 Häufigkeitszähler neu skaliert. Dafür werden zunächst die
 Häufigkeitszähler aller Blätter des Huffman-Baums halbiert, was einer
-einfachen Rechtsshift-Operation enstpricht. Dann werden von den
+einfachen Rechtsshift-Operation entpricht. Dann werden von den
 Blättern ausgehend bis zu Wurzel die Zähler aller Zwischenknoten mit
-der Summe der Nachfolgerknoten aktualisiert.
+der Summe der Nachfolgeknoten aktualisiert.
 
 \begin{figure}[h]
 \centering
@@ -931,7 +931,7 @@ child {
     node[right] {77}
   }
   edge from parent
-  node[right,red] {154}
+  node[right,red] {\textbf{154}}
 };
 \end{tikzpicture}
 
@@ -956,12 +956,12 @@ denn die Symbole, die nach der Skalierung gelesen werden, haben einen
 größeren Einfluss auf die Häufigkeitszähler, als die Symbole davor,
 deren Häufigkeiten halbiert wurden. Dies kann sogar einen Vorteil
 haben, denn die neu gelesenen Symbole können eine größere Abhängigkeit
-von den kurz vohrer aufgetretenen Symbolen haben als von Symbolen, die
+von den kurz vorher aufgetretenen Symbolen haben als von Symbolen, die
 weiter in der Vergangenheit aufgetreten sind.
 
 \subsection{Überlauf der Codeworte}
 Ein weiteres Problem ist der mögliche Überlauf der Codewörter. Die
-Länge eines Codewortes ist abhängig davon, wie tief ein Blatt-Knoten
+Länge eines Codeworts ist abhängig davon, wie tief ein Blatt-Knoten
 für ein Symbol im Huffman-Baum liegt. Bei vielen verschieden
 Eingabesymbolen kann der Huffman-Baum große Höhe erreichen.
 
@@ -973,7 +973,7 @@ ineffizient wäre. Weil das Codewort noch umgedreht werden muss, kann
 der Kodierer es nicht schon während des Durchlaufens des Baums
 ausgeben und muss es zwischenspeichern.
 
-Wenn das Codewort als Integer zwischengespeichert wird, muss bachtet
+Wenn das Codewort als Integer zwischengespeichert wird, muss beachtet
 werden, dass es auch hier zu einem Überlauf kommen kann, wenn das
 Codewort zu lang ist. Die einfachste Möglichkeit das Problem zu
 umgehen ist die Verwendung einer verketteten Liste, um die Bits des
@@ -987,15 +987,12 @@ Knotens gehen, bis er einen Blattknoten erreicht hat und das
 zugehörige Symbol ausgeben kann.
 
 \section{Anwendungen}
-In der Praxis wird die Huffman-Kodierung in der adaptiven Variante zum
-Beispiel im Unix-Tool \emph{compact} verwendet. Bei vielen anderen
-Programmen ist die Huffman-Kodierung Teil eines mehrstufigen Prozesses
-der Komprimierung.
-
-Die Huffman-Kodierung auch Teil des JPEG-Standards zur
-verlustbehafteten Komprimierung von Bilder. Sie wurde aus Performance
-und patentrechtlichen Gründen einer arithmetischen Kodierung
-vorgezogen. \cite{Wallace:1991}
+In der Praxis wird die Huffman-Kodierung meist in der adaptiven
+Variante verwendet. Ein einfaches Beispiel dafür ist das Unix-Tool
+\emph{compact}, welches Dateien mit Hilfe der adaptiven
+Huffman-Kodierung komprimiert. Bei vielen anderen
+Kompressionsverfahren ist die Huffman-Kodierung Teil eines
+mehrstufigen Prozesses der Komprimierung. \cite[S. 234]{Salomon:2010}
 
 Das arithmetische Kodieren ist der größte Konkurrent der
 Huffman-Kodierung. Der größte Vorteil über der Huffman-Kodierung ist
@@ -1007,24 +1004,36 @@ Huffman-Kodierung, ein einzelner Fehler kann zum falschen Dekodieren
 einer großen Datenmenge führen, während sich die adaptive
 Huffman-Kodierung schnell wieder korrigiert. \cite{Bookstein:1993}
 
+Die Huffman-Kodierung ist Teil des JPEG-Standards zur verlustbehafteten
+Komprimierung von Bilder. Sie wird letzten Schritt der
+JPEG-Kompression eingesetzt. Die Huffman-Kodierung wurde aus
+Performance- und patentrechtlichen Gründen dem arithmetischen Kodieren
+vorgezogen, wobei das arithmeteische Kodieren noch als optionale
+Funktion im JPEG-Standard erlaubt ist. \cite{Wallace:1991}
 
-% JPG
+Auch zur verlustbehafteten Audiokompression wird die Huffman-Kodierung
+verwendet. Sowohl bei der MP3-Kompression als auch bei der
+AAC-Kompression wird die Huffman-Kodierung verwendet. \cite[S. 1055 -- S. 1076]{Salomon:2010}
 
-% AAC
+\subsection{Textkompression}
+Die Textkompression scheint eines der idealen Anwendungsfälle für die
+Huffman-Kodier\-ung zu sein. Ein Text hat ein eindeutiges Alphabet,
+welches normalerweise eine relativ stationäre
+Wahrscheinlichkeitsverteilung besitzt. Doch gerade bei Text gibt es
+viele Korrelationen zwischen den einzelnen Wörtern und Silben, zum
+Beispiel folgt auf das Wort \emph{so} häufig das Wort
+\emph{dass}. Solche Eigenschaften werden von der Huffman-Kodierung
+nicht ausgenutzt. \cite[S. 74]{Sayood:2006}
 
-% MP3
-
-
-Die folgend vorgestellten Anwendungsfälle basieren auf \cite{Sayood:2006}.
-
-% -> Sayood 3.8 Applications of Huffman Coding
-\subsection{Textkomprimierung}
+Im folgenden Beispiel wird die Kompressionsrate für einen Text
+untersucht, der eine Wahrscheinlichkeitsverteilung hat, die der
+Buchstabenverteilung der deutschen Sprache entspricht.
 
 In Tabelle~\ref{tab:HGER} ist ein Huffman-Code für die
 Wahrscheinlichkeitsverteilung der Buchstaben der deutschen Sprache
 Huffman-Code angegeben. Er wurde nach dem Verfahren aus
 Abschnitt~\ref{sec:HTREE} erzeugt. Die Wahrscheinlichkeitswerte
-stammen aus \cite{Beutelspacher:2005}. Die Umlaute \emph{ä}, \emph{ö}
+stammen aus \cite[S. 10]{Beutelspacher:2005}. Die Umlaute \emph{ä}, \emph{ö}
 und \emph{ü} wurden wie \emph{ae}, \emph{oe} und \emph{ue} gezählt.
 
 Um den voraussichtlichen Grad der Komprimierung zu berechnen, wird
@@ -1034,7 +1043,7 @@ Wahrscheinlichkeit des Symbols für das sie stehen multipliziert wird
 und dann die Summe der resultierenden Werte bildet. Folgend ist die
 Methode zur Berechnung der mittleren Codewort-Länge nochmal als Formel
 angegeben, wobei $n$ die Zahl aller Codewörter ist und die
-Funktion \emph{length} die Länge eines Codewortes berechnet:
+Funktion \emph{length} die Länge eines Codeworts berechnet:
 
 \begin{equation}
 L = \sum_{i=1}^{n} P(a_i) \cdot \mathrm{length}(C(a_i))
@@ -1047,20 +1056,9 @@ ergibt sich folgender Wert:
 L = 0.174 \cdot 3 + 0.0978 \cdot 3 + 0.0755 \cdot 4\ \ \cdots\ \ 0.0002 \cdot 11 = 4.1246
 \end{equation}
 
-Der Huffman-Code aus Tabelle~\ref{tab:HGER} hat somit eine mittlere
-Länge von 4.1246 Bit pro Symbol. Wenn man die 27 Buchstaben mit einer
-festen Länge kodiert, benötigt man 5 Bit pro Symbol, wobei 5
-Codewörter dann nicht belegt sind. Durch die Huffman-Kodierung wird in
-diesem Fall also bei einem Text, der eine
-Wahrscheinlichkeitsverteilung wie in Tabelle~\ref{tab:HGER} besitzt,
-eine Kompressionsrate von $4.1246 : 5 = 82.492 \%$ erreicht. Hierbei
-handelt es sich natürlich nur um ein einfaches Beispiel, in der Praxis
-kommen sowohl Satzzeichen als auch Groß- und Kleinschreibung hinzu.
-
-\begin{table}
+\begin{table}[h]
 \centering
 \caption{Ein Huffman-Code für die deutsche Sprache}
-\vspace{1ex}
 \begin{tabular}{c|c|l}
 $a_i$ & $P(a_i)$ & $C(a_i)$ \\ \hline
 E & $0.1740$ & {\tt111} \\
@@ -1094,23 +1092,41 @@ Q & $0.0002$ & {\tt01100101010}
 \label{tab:HGER}
 \end{table}
 
-\subsection{Verlustfreie Bildkomprimierung}
+Der Huffman-Code aus Tabelle~\ref{tab:HGER} hat somit eine mittlere
+Länge von 4.1246 Bit pro Symbol. Wenn man die 27 Buchstaben mit einer
+festen Länge kodiert, benötigt man 5 Bit pro Symbol, wobei 5
+Codewörter dann nicht belegt sind. Durch die Huffman-Kodierung wird in
+diesem Fall also bei einem Text, der eine
+Wahrscheinlichkeitsverteilung wie in Tabelle~\ref{tab:HGER} besitzt,
+eine Kompressionsrate von $4.1246 : 5 = 82.492 \%$ erreicht. Hierbei
+handelt es sich natürlich nur um ein einfaches Beispiel, in der Praxis
+kommen sowohl Satzzeichen als auch Groß- und Kleinschreibung hinzu.
+
+\subsection{Verlustfreie Bildkompression}
 Die Huffman-Kodierung kann zur verlustfreien Komprimierung von Bildern
-verwendet werden.
+verwendet werden. Der einfachste Fall ist ein graustufiges Bild. Die
+Symbole des Eingabealphabets wären in diesem Fall die Grauwerte, bei
+einer 8-Bit-Abstufung pro Pixel wären das die Werte von 0 bis 255.
+Die Komprimierung mit der Huffman-Kodierung ist umso effektiver, je
+mehr gleiche Grautöne das zu komprimierende Bild enthält. \cite[S. 72
+  f.]{Sayood:2006}
 
-Der einfachste Fall ist ein graustufiges Bild. Die Symbole des
-Eingabealphabets wären in diesem Fall die Grauwerte, bei einer
-8-Bit-Abstufung pro Pixel wären das die Werte von 0 bis 255.
+Trotzdem ist mit Kodierung von Bilder mit der Huffman-Kodierung allein
+keine gute Kompressionsrate möglich, da die Huffman-Kodierung die
+Korrelationen zwischen den Pixeln nicht beachtet. Zum Beispiel hat ein
+Pixel, das direkt neben einem anderen Pixel liegt, eine sehr hohe
+Wahrscheinlichkeit, die selbe oder eine ähnliche Farbe zu haben als
+eine komplett andere.  \cite[S. 217 f.]{Salomon:2010}
 
-Die Komprimierung mit der Huffman-Kodierung ist umso effektivsten, je
-mehr gleiche Farb- bzw. Grautöne enthält das zu komprimierende Bild
-enthält.
+\subsection{Verlustfreie Audiokompression}
+Ein roher Audiodatenstrom in CD-Qualität und einem Kanal hat eine
+Samplerate von 44100~Hz und eine Auflösung von 2 Bytes pro Sample. Das
+heißt, dass jede Sekunde 44100 mal die Amplitude eines Audiosignals
+gemessen und als 16-Bit Integer gespeichert wurde.
 
-\subsection{Audiokomprimierung}
-
+\clearpage
 \renewcommand{\refname}{Literaturverzeichnis}
-\bibliographystyle{unsrt}
-\bibliography{adaptive_huffman}
+\bibliographystyle{unsrt} \bibliography{adaptive_huffman}
 \addcontentsline{toc}{section}{Literaturverzeichnis}
 
 \end{document}

@@ -61,9 +61,7 @@ edge from parent path={
 (\tikzchildnode)}
 }
 
-% Define styles for bags and leafs
-\tikzstyle{bag} = [text width=8em, text centered]
-\tikzstyle{cicleend} = [circle, minimum width=3pt, fill, inner sep=0pt]
+\tikzstyle{end} = [circle, minimum width=5pt, fill, inner sep=0pt]
 
 \renewcommand*\ttdefault{txtt}
 
@@ -80,6 +78,7 @@ edge from parent path={
 \titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
 
 \begin{document}
+%\raggedbottom
 
 \pagestyle{empty}
 \begin{center}
@@ -144,22 +143,24 @@ anpasst.
 %Symbolen so zugewiesen werden, dass die Codewörter in der
 %resultierende Kodierung die minimale mittlere Länge haben.
 
-\section{Huffman-Kodierung}
-Dieser Abschnitt gibt eine Einführung in die Hufmann-Kodierung, welche
+\section{Huffman-Kodierung} \label{sec:huffman}
+Dieser Abschnitt gibt eine Einführung in die Hufman-Kodierung, welche
 die Grundlage für die adaptive Huffman-Kodierung ist. Der Abschnitt
-basiert aufsind hauptsächlich \cite{Salomon:2010} und
-\cite{Sayood:2006}.
+basiert auf \cite{Salomon:2010} und \cite{Sayood:2006}.
 
 Die Huffman-Kodierung ist eine stochastische Kodierung, das heißt, sie
 kodiert Daten basierend auf der Häufigkeit der vorkommenden Symbole
-des Eingabealphabets. Es gibt Fälle, in denen durch die
-Huffman-Kodierung keine Komprimierung erziehlt werden kann, zum
-Beispiel bei Symbolen mit gleicher Häufigkeit, da es sich dabei
-stochastisch gesehen um Zufallsdaten handelt. Beispielsweise ist eine
-Zeichenkette $a_1a_1{\dots}a_1a_2a_2{\dots}a_2a_3a_3{\dots}a_3$ mit
-der Huffman-Kodierung nicht komprimierbar. Bei einem Alphabet, welches
-nur aus zwei Symbolen besteht, kann die Huffman-Kodierung auch nicht
-zur Komprimierung verwendet werden. Einem Symbol würde in diesem Fall
+des Eingabealphabets. Sie wurde 1952 von David Huffman entwickelt und
+ist seitdem Gegenstand vieler Forschungsarbeiten.
+
+Es gibt Fälle, in denen durch die Huffman-Kodierung keine
+Komprimierung erziehlt werden kann, zum Beispiel bei Symbolen mit
+gleicher Häufigkeit, da es sich dabei stochastisch gesehen um
+Zufallsdaten handelt. Beispielsweise ist eine Zeichenkette
+$a_1a_1{\dots}a_1a_2a_2{\dots}a_2a_3a_3{\dots}a_3$ mit der
+Huffman-Kodierung nicht komprimierbar. Bei einem Alphabet, welches nur
+aus zwei Symbolen besteht, kann die Huffman-Kodierung auch nicht zur
+Komprimierung verwendet werden. Einem Symbol würde in diesem Fall
 entweder die {\tt1} oder die {\tt0} als Codewort zugewiesen werden.
 Da die Huffman-Kodierung keine Codewörter vergeben kann, die kürzer
 als ein Bit sind, ist es nicht möglich, dieses Alphabet zu verbessern.
@@ -333,9 +334,9 @@ $\{B, C, D\}$ mit der summierten Wahrscheinlichkeit von $0.20$ in die
 Liste geschrieben und es ergibt sich Tabelle~\ref{tab:HBEX3}.
 
 Der gleiche Prozess wird noch zwei mal wiederholt (siehe
-Tabelle~\ref{tab:HBEX4} und \ref{tab:HBEX5}), dann existiert nur noch
-ein Hilfssymbol in der Tabelle. Der Huffman-Baum ist nun fertig und in
-Abbildung~\ref{fig:HBEX} dargestellt.
+Tabelle~\ref{tab:HBEX4} und \ref{tab:HBEX5}), danach existiert nur
+noch ein Hilfssymbol in der Liste. Der Huffman-Baum ist nun fertig
+und in Abbildung~\ref{fig:HBEX} dargestellt.
 
 \begin{figure}[h]
 \centering
@@ -462,8 +463,7 @@ das Codewort \emph{\tt01}. Insgesamt wird \emph{RWTH} also zu
 \caption{Kodierung mit Hilfe eines Huffman-Baums} \label{fig:HKOD}
 \end{figure}
 
-\subsection{Dekodierung}
-
+\subsection{Dekodierung} \label{sec:huffman-dec}
 Die Dekodierung kann mit Hilfe des Huffman-Baums durchgeführt
 werden. Damit der Dekodierer einen Huffman-Baum erzeugen kann, muss
 entweder die Häufigkeitsverteilung oder der Huffman-Baum zusammen mit
@@ -488,38 +488,151 @@ Baums und verarbeitet das nächste Bit.
 %entspricht, ist die Berechnung von Interesse.
 
 \section{Adaptive Huffman-Kodierung}
-Die adaptive Huffman-Kodierung aktualisiert laufend den Huffman-Baum.
+Der folgende Abschnitt basiert auf \cite{Salomon:2010}.
 
-Da anfangs noch keine Häufigkeiten der auftauchenden Wörter Symbole
-bekannt sind, wird mit einem leeren Baum begonnen. Mit jeden neuen
-Wort wird der Baum entsprechend der neuen
-Häufigkeitsverteilung aktualisiert. Dieser Schritt wird auch
-im Dekodierer durchgeführt, so dass eine Übertragung des Huffman-Baums
-nicht nötig ist.
+Für die Huffman-Kodierung ist das Wissen über die
+Wahrscheinlichkeitsverteilung notwendig der zu kodierenden Daten
+notwendig, um die Codewörter für die Symbole des Eingabealphabets zu
+bestimmen. Es gibt jedoch Fälle, in denen diese Verteilung im voraus
+nicht bekannt ist, zum Beispiel bei der Übertragung von Echtzeitdaten
+über ein Netzwerk. Auch ist Verfahren zur Kodierung einer Datei in nur
+einem Durchgang wünschenswert. Normalerweise muss eine Datei zunächst
+komplett gelesen werden, um die Wahrscheinlichkeiten der vorkommenden
+Symbole zu bestimmen, aber besonders bei großen Datenmengen und
+begrenztem Arbeitsspeicher ist dies ein erheblicher Rechenaufwand.
 
-Der Vorteil der adaptiven Huffman-Kodierung ist die Möglichkeit einen
-Datenstrom zu komprimieren ohne vorher Informationen über die
-Häufigkeitsverteilung der Daten zu besitzen. Das macht es auch möglich
-Dateien in nur einem Durchgang zu komprimieren, ohne voher die
-Häufigkeiten der vorkommenden Wörter zu analysieren. Ein Nachteil ist,
-dass diese Methode anfällig für Übertragungsfehler ist, da die
-Hufmann-Bäume im Encoder und Decoder in diesem Fall divergieren
-können.
+Die Methode zur Lösung dieser Problemstellung ist die \emph{adaptive
+  Huffman-Kodierung}. Sie wurde ursprünglich 1973 von Newton Faller
+und 1978 Robert Gallager unabhängig entwickelt und 1985 von Donald
+Knuth (1985) wesentlich verbessert.
+
+Auch die adaptive Huffman-Kodierung verwendet einen Huffman-Baum zur
+Erzeugung der Codeworte. Da anfangs jedoch noch keine Häufigkeiten der
+auftretenden Symbole und auch die Symbole selbst nicht bekannt sind,
+beginnen Kodierer und Dekodierer mit einem leeren Baum. Von diesem
+Punkt an aktualisieren Kodierer und Dekodierer den Baum mit jeden
+neuen Wort entsprechend der neuen Häufigkeitsverteilung. Es ist
+wichtig, dass Kodierer und Dekodierer die auf den Huffman-Baum
+angewandeten Operationen exakt spiegeln und mit Mehrdeutigkeiten auf
+die selbe Weise umgehen.
+
+% Robustheit
 
 \subsection{Kodierung}
 
+Der Kodierer beginnt das Lesen der Eingabedaten mit einem leeren
+Baum. Das erste gelesene Symbol gibt der Kodierer unkomprimiert aus
+und fügt das Symbol dann in den Baum ein, wodurch ab diesem Punkt ein
+Codewort für dieses Symbol exisitert. Wenn der Kodierer das nächste
+mal auf dieses Symbol trifft, wird dieses Codewort ausgegeben und der
+Häufigkeitszähler für dieses Symbol im Huffman-Baum inkrementiert.
+Dabei kann es passieren, dass der Huffman-Baum nicht mehr das
+Kriterium eines optimalen Codes erfüllt (Abschnitt~\ref{sec:huffman}).
+Deshalb muss nach jedem Symbol überprüft werden, ob dies der Fall ist,
+wenn ja muss der Huffman-Baum neu angeordnet werden, wodurch sich die
+Codewörter ändern.
+
 \subsection{Dekodierung}
 
-\subsection{Aktualisierung des Huffman-Baums}
+Der Dekodierer vollzieht exakt die selben Schritte. Wenn er ein
+unkomprimiertes Symbol liest, fügt er dies zu seinem Huffman-Baum
+hinzu und hat so für das nächste Auftreten dieses Symbols das selbe
+Codewort wie der Kodierer. Wenn er ein kodiertes Symbol -- also ein
+Codewort -- liest, wird es, wie in Abschnitt~\ref{sec:huffman-dec}
+beschrieben, dekodiert und ausgegeben. Zusätzlich wird der
+Häufigkeitszähler für dieses Symbol inkrementiert und der Huffman-Baum
+gegebenenfalls wie beim Kodierer neu angeordnet.
 
-% Beispiel
+Nun stellt sich das Problem, dass der Dekodierer nicht zwischen
+unkomprimierten Codewörtern unterscheiden kann, da es sich im beiden
+Fällen nur um eine Bitfolge im Datenstrom handelt. Um diese Unklarheit
+zu beseitigen wird jedes unkomprimierte Symbol mit einem speziell
+reserviertem Codewort begonnen, dem sogenannten \emph{Escape-Code}.
+Nach dem Escape-Code kann dann zum Beispiel ein einzelnes
+ASCII-Zeichen folgen oder auch längere Bitfolgen, die entweder mit der
+zu erwartenden Länge beginnen oder selbst mit einem eigenen
+eindeutigen Escape-Code enden.
+
+Weiterhin besteht das Problem, dass der Escape-Code kein Codewort
+eines Symbols sein darf und auch kein Präfix davon. Erschwerend kommt
+hinzu, dass sich die Codewörter durch die Neuanordnung des
+Huffman-Baums laufend verändern können. Der natürlichste Weg ist also,
+ein eigenes, leeres Blatt für den Escape-Code in den Huffman-Baum
+einzufügen. Das bringt den Vorteil mit sich, dass sich die Länge des
+Codeworts für den Escape-Code automatisch an die Häufigkeit des
+auftretens anpasst. Je seltener ein zuvor unbekanntes Symbol auftritt,
+welches unkomprimiert übertragen werden muss, desto länger ist das
+Codewort für den Escape-Code im Vergleich zu den Codewörtern der
+anderen Symbole.
+
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+\node {}
+  child {
+        node {\tt1}
+        child {
+            node {A}
+            edge from parent
+        }
+        edge from parent
+        node[left]  {$\frac{11}{20}$}
+    }
+    child {
+        node {\tt0}
+        child {
+                node {\tt1}
+                child {
+                    node {B}
+                    edge from parent
+                }
+                edge from parent
+                node[left] {$\frac{5}{20}$}
+            }
+            child {
+                node {\tt0}
+                child {
+                    node {\tt1}
+                    child {
+                        node[end] {}
+                        edge from parent
+                    }
+                    edge from parent
+                    node[left] {$\frac{3}{20}$}
+                }
+                child {
+                    node {\tt0}
+                    child {
+                        node {R}
+                        edge from parent
+                    }
+                    edge from parent
+                    node[right] {$\frac{1}{20}$}
+                }
+                edge from parent
+                node[right] {$\frac{4}{20}$}
+            }
+        edge from parent
+        node[right] {$\frac{9}{20}$}
+    };
+\end{tikzpicture}
+\caption{Ein Huffman-Baum mit Platzhalter für den Escape-Code} \label{fig:HESC}
+\end{figure}
+
+
+\subsection{Aktualisierung des Huffman-Baums}
+Der Huffman-Baum muss sowohl im Kodierer als auch im Dekodierer nach
+jeder Aktualisierung eines Häufigkeitszählers überprüft werden und
+dann, falls es sich nicht länger um einen Huffman-Baum handelt,
+aktualisiert werden.
 
 \subsection{Überlauf der Häufigkeitszähler}
-Die Häufigkeitszähler für das Auftreten von Symbolen werden bei
-der adaptiven Huffman-Kodierung als Integer gespeichert. Abhängig von
-der Datenmenge kann es passieren, dass die auftretende Häufigkeit
-eines Symbols die Grenze des darstellbaren Zahlenbereiches
-überschreitet -- es kommt zu einem Integerüberlauf.
+Die Häufigkeitszähler für das Auftreten von Symbolen werden bei der
+adaptiven Huffman-Kodierung als Integer gespeichert. Abhängig von der
+Datenmenge kann es passieren, dass die auftretende Häufigkeit eines
+Symbols die Grenze des darstellbaren Zahlenbereiches überschreitet --
+es kommt zu einem Integerüberlauf.
 
 Der darstellbare Zahlenbereich für Integer ist abhängig von der
 verwendeten Hardware. Mit modernen 64-Bit Rechnerarchitekturen ist die
@@ -531,9 +644,9 @@ nur 256 bzw. 65536 Werte darstellen können.
 Eine Möglichkeit zu Verhinderung der Überläufe wäre die Benutzung
 einer Biblitothek zur Speicherung von Integern mit dynamischer Größe,
 wie zum Beispiel die \emph{GNU Multiple Precision Arithmetic
- Library}\cite{GMP}. Ein Nachteil ist der entstehende Overhead,
-außerdem ist die Verwendung einer solchen Bibliothek bei vielen
-Microcontrollern nicht möglich.
+  Library}. Ein Nachteil ist der entstehende Overhead, außerdem ist
+die Verwendung einer solchen Bibliothek bei vielen Microcontrollern
+nicht möglich. \cite{GMP}
 
 Eine weitere Möglichkeit ist das Prüfen auf einen möglichen Überlauf
 wenn ein Häufigkeitszähler inkrementiert wird. Würde durch das
@@ -575,21 +688,50 @@ Beispiel im Unix-Tool \emph{compact} verwendet. Bei vielen anderen
 Programmen ist die Huffman-Kodierung Teil eines mehrstufigen Prozesses
 der Komprimierung.
 
+Die Huffman-Kodierung auch Teil des JPEG-Standards zur
+verlustbehafteten Komprimierung von Bilder. Sie wurde aus Performance
+und patentrechtlichen Gründen einer arithmetischen Kodierung
+vorgezogen. \cite{Wallace:1991}
+
+Das arithmetische Kodieren ist der größte Konkurrent der
+Huffman-Kodierung. Der größte Vorteil über der Huffman-Kodierung ist
+eine höhere Kompressionsrate bei den meisten Anwendungsfällen. Auf der
+anderen Seite ist das arithmetische Kodieren deutlich aufwendiger und
+somit langsamer als die Huffman-Kodierung. Auch ist das adaptive
+arithmetische Kodieren nicht so robust wie die adaptive
+Huffman-Kodierung, ein einzelner Fehler kann zum falschen Dekodieren
+einer großen Datenmenge führen, während sich die adaptive
+Huffman-Kodierung schnell wieder korrigiert. \cite{Bookstein:1993}
+
+
+% JPG
+
+% AAC
+
+% MP3
+
 % -> Salomon 5.2.9 Is Huffman Coding Dead
 
-Die hier vorgestellten Anwendungsfälle basieren auf den Beispielen aus
-\cite{Sayood:2006}.
+Die folgend vorgestellten Anwendungsfälle basieren auf \cite{Sayood:2006}.
 
 % -> Sayood 3.8 Applications of Huffman Coding
 \subsection{Textkomprimierung}
 
 \subsection{Verlustfreie Bildkomprimierung}
+Die Huffman-Kodierung kann zur verlustfreien Komprimierung von Bildern
+verwendet werden.
+
+Der einfachste Fall ist ein graustufiges Bild. Die Symbole des
+Eingabealphabets wären in diesem Fall die Grauwerte, bei einer
+8-Bit-Abstufung pro Pixel wären das die Werte von 0 bis 255.
+
+Die Komprimierung mit der Huffman-Kodierung ist umso effektivsten, je
+mehr gleiche Farb- bzw. Grautöne enthält das zu komprimierende Bild
+enthält.
 
 \subsection{Audiokomprimierung}
 
-
-Test \cite{Salomon:2010}  \cite{Williams:1991}
-
+\renewcommand{\refname}{Literaturverzeichnis}
 \bibliographystyle{unsrt}
 \bibliography{adaptive_huffman}
 \addcontentsline{toc}{section}{Literaturverzeichnis}

@@ -118,42 +118,44 @@ edge from parent path={
 \nocite{*}
 
 \section{Einleitung}
-Bei einer Datenübertragung mit eingeschränkter Bandbreite ist eine
-Komprimierung der Daten von großem Vorteil.
+Auch wenn heute die verfügbaren Speicherkapazitäten und Bandbreiten
+größer als jemals zuvor sind, ist die Komprimierung von Daten immer
+noch ein wichtiges Thema. Mit der Datenkompression lassen sich
+Übertragungskanäle noch weiter optimieren und Datenspeicher noch
+besser ausnutzen.
 
-Ein Symbol kann ein eine Bitfolge, ein Buchstabe, ein Wort oder auch
-eine Kombination von Wörtern sein. Wie ein Symbol definiert ist, ist
-vom Anwendungsfall abhängig. Es kann beispielsweise mehr Sinn machen,
-bei einem Text die Wörter als Symbole zu definieren, als die
-Buchstaben. Die Menge an Symbolen, die für eine Datenmenge
-exisitiert, wird als Alphabet bezeichnet.
+Es gibt eine Vielzahl von Methoden zur Datenkompression, viele der
+Methoden sind für spezielle Anwendungsfälle entwickelt worden. Eine
+Form der Datenkomprimierung ist die Entropiekodierung. Sie komprimiert
+Daten, indem Bitfolgen aus den Eingabedaten, die sogenannten Symbole,
+mit anderen Bitfolgen, den sogenannten Codewörtern, ersetzt
+werden. Die Komprimierung wird erreicht, indem häufiger vorkommende
+Symbole mit kürzeren Codewörtern ersetzt und seltener vorkommende
+Symbole mit längeren Codewörtern ersetzt werden.
 
-Ein Problem der Huffman-Kodierung ist, dass die Wahrscheinlichkeiten
-der zu kodierenden Symbole vor der Kodierung bekannt sein müssen. Wenn
-die zu komprimierenden Daten lokal verfügbar sind, ist es möglich,
-zuerst die Häufigkeiten der vorkommenden Symbole zu analysieren und
-dann die Daten zu kodieren. Handelt es sich aber um einen laufenden
-Datenstrom, ist es nicht möglich die Häufigkeiten im vorraus zu
-ermitteln. Eine Lösung für dieses Problem bietet die adaptive
-Huffman-Kodierung, die sich laufend an die Häufigkeiten der Symbole
-anpasst.
+Ein Symbol kann ein eine einfache Bitfolge, ein Buchstabe, ein Wort
+oder auch eine Kombination von Wörtern sein. Wie ein Symbol definiert
+ist, ist vom Anwendungsfall abhängig. Es kann beispielsweise mehr Sinn
+machen, bei einem Text die Wörter als Symbole zu definieren, als die
+Buchstaben. Die Menge an Symbolen, die in einer Datenmenge existieren,
+wird als Alphabet bezeichnet.
 
-% Mittlere Länge
-
-%Bei der Konstruktion von Codes mit variabler Länge sind zwei Punkte
-%wichtig, die Codewörter sollten eindeutig sein und sie sollten den
-%Symbolen so zugewiesen werden, dass die Codewörter in der
-%resultierende Kodierung die minimale mittlere Länge haben.
+Diese Ausarbeitung befasst sich mit der Huffman-Kodierung, eine Form
+der Entropiekodierung, der adaptiven Huffman-Kodierung und den
+Anwendungen der Huffman-Kodierung, welche in der Praxis meist in der
+adaptiven Variante verwendet wird.
 
 \section{Huffman-Kodierung} \label{sec:huffman}
-Dieser Abschnitt gibt eine Einführung in die Hufman-Kodierung, welche
-die Grundlage für die adaptive Huffman-Kodierung ist. Der Abschnitt
+Dieser Abschnitt ist eine Einführung in die Hufman-Kodierung, welche
+die Grundlage der adaptive Huffman-Kodierung ist. Der Abschnitt
 basiert auf \cite{Salomon:2010} und \cite{Sayood:2006}.
 
-Die Huffman-Kodierung ist eine stochastische Kodierung, das heißt, sie
+Die Huffman-Kodierung ist eine Entropiekodierung, das heißt, sie
 kodiert Daten basierend auf der Häufigkeit der vorkommenden Symbole
-des Eingabealphabets. Sie wurde 1952 von David Huffman entwickelt und
-ist seitdem Gegenstand vieler Forschungsarbeiten.
+des Eingabealphabets. Häufig vorkommende Symbole werden mit kürzeren
+Codewörtern kodiert als seltener vorkommende Symbole. Die
+Huffman-Kodierung wurde 1952 von David Huffman entwickelt und ist
+seitdem Gegenstand vieler Forschungsarbeiten.
 
 Es gibt Fälle, in denen durch die Huffman-Kodierung keine
 Komprimierung erziehlt werden kann, zum Beispiel bei Symbolen mit
@@ -388,28 +390,30 @@ child {
 \caption{Huffman-Baum für die Verteilung aus Tabelle~\ref{tab:HBEX}} \label{fig:HBEX}
 \end{figure}
 
-% sibling-property
-
 \subsection{Kodierung}
 Nachdem der Huffman-Baum erzeugt wurde, kann er verwendet werden, um
-die Codewörter für die Symbole zu bestimmen. Aus dem Pfad zu einem
-Blatt lässt sich das Codewort für dieses Blatt ableiten.
+die Codewörter für die Symbole zu bestimmen. Aus dem Pfad von der
+Wurzel zu einem Blatt lässt sich das Codewort für dieses Blatt
+ableiten, indem linke Abzweige von einem Knoten als ein Bit und rechte
+Abzweige als das andere Bit interpretiert werden. In der Praxis läuft
+der Kodierer bedingt von der Datenstruktur, in der der Baum gespeicher
+ist, vom Knoten zur Wurzel und muss das erhaltene Codewort wieder
+umdrehen.
 
 In Abbildung~\ref{fig:HKOD} ist ein Huffman-Baum mit den Symbolen
 \emph{H}, \emph{R}, \emph{T} und \emph{W} abgebildet. Um das Wort
-\emph{RWTH} zu kodieren, wird nun für jedes Symbol der Pfad von der
-Wurzel bis zu dem Blatt für dieses Symbol durchschritten. Dabei wird das
+\emph{RWTH} zu kodieren, wird nun für jedes Symbol der Pfad von dem
+Blatt dieses Symbols zur Wurzel durchschritten. Dabei wird das
 Codewort gebildet, indem bei jedem Knoten, der auf dem Weg erreicht
 wird, eine {\tt1} an das Codewort gehängt, wenn der Knoten der linke
-Nachfolger des vorherigen ist, und eine {\tt0} angehängt, wenn der
-Knoten der rechte Nachfolger ist.
+Nachfolger das Elternknoten ist, und eine {\tt0} angehängt, wenn der
+Knoten der rechte Nachfolger des Elternknotens ist. Das auf diesem
+Weg erhaltene Codewort wird dann noch umgedreht.
 
 Für \emph{R} erhält man so das Codewort {\tt000}, für \emph{W} das
 Codewort {\tt001}, für \emph{T} das Codewort {\tt1} und für \emph{H}
 das Codewort \emph{\tt01}. Insgesamt wird \emph{RWTH} also zu
 {\tt000001101} kodiert.
-
-% Der beste Code ist der mit der kleinsten Varianz, da die Buffer nicht groß sein müssen
 
 \begin{figure}[h]
 \centering
@@ -483,12 +487,6 @@ erreicht wird, ist ein Symbol fertig dekodiert, der Dekodierer gibt
 das im Blatt gespeicherte Symbol aus und kehrt zurück zur Wurzel des
 Baums und verarbeitet das nächste Bit.
 
-%\subsection{Mittlere Codewort-Länge}
-
-%\subsection{Höhe des Huffman-Baums}
-%Da die Höhe des Huffman-Baumes der maximalen Codewort länge
-%entspricht, ist die Berechnung von Interesse.
-
 \section{Adaptive Huffman-Kodierung}
 Der folgende Abschnitt basiert auf \cite{Salomon:2010}.
 
@@ -506,12 +504,12 @@ begrenztem Arbeitsspeicher ist dies ein erheblicher Rechenaufwand.
 Die Methode zur Lösung dieser Problemstellung ist die \emph{adaptive
   Huffman-Kodierung}. Mit ihr lassen sich Datenströme in einem
 Durchgang und ohne Verzögerung kodieren, für jedes Eingangssymbol wird
-sofort ein Ausgangssymbol erzeugt. Sie ist genau wie die normale
-Huffman-Kodierung eine stochastische Kodierung, passt sich aber
-laufend an die Wahrscheinlichkeitsverteilung des Eingabealphabets an.
-Die adaptive Huffman-Kodierung wurde ursprünglich 1973 von Newton
-Faller und 1978 Robert Gallager unabhängig entwickelt und 1985 von
-Donald Knuth wesentlich verbessert.
+sofort ein Ausgangssymbol erzeugt. Sie ist basiert auf der
+Huffman-Kodierung, passt sich aber laufend an die
+Wahrscheinlichkeitsverteilung des Eingabealphabets an. Die adaptive
+Huffman-Kodierung wurde ursprünglich 1973 von Newton Faller und 1978
+Robert Gallager unabhängig entwickelt und 1985 von Donald Knuth
+wesentlich verbessert.
 
 Auch die adaptive Huffman-Kodierung verwendet einen Huffman-Baum zur
 Erzeugung der Codeworte. Da anfangs jedoch noch keine Häufigkeiten der
@@ -524,7 +522,7 @@ Häufigkeit des zugehörigen Symbols gespeichert ist. Wenn es sich nicht
 um einen Blattknoten handelt, wird die Summe der Häufigkeiten beider
 Nachfolgerknoten gespeichert. Beim Inkrementieren des
 Häufigkeitszählers eines Blattknotens müssen deshalb auch alle
-Vorgängerknoten bis zu Wurzel aktualisiert werden. Es wäre auch
+Elternknoten bis zu Wurzel aktualisiert werden. Es wäre auch
 möglich die Wahrscheinlichkeiten als Fließkommazahlen zu speichern,
 dies wäre jedoch ein höherer Rechenaufwand und kann wegen mangelnder
 Präzision zu Problemen führen. Aber auch die Speicherung als Integer bringt
@@ -533,8 +531,6 @@ Probleme mit sich, näheres dazu in Abschnitt~\ref{sec:AHCOUNTER}.
 Es ist wichtig, dass Kodierer und Dekodierer die auf den Huffman-Baum
 angewandeten Operationen exakt spiegeln und mit Mehrdeutigkeiten auf
 die selbe Weise umgehen.
-
-% Robustheit
 
 \subsection{Kodierung}
 
@@ -547,7 +543,7 @@ Häufigkeitszähler für dieses Symbol im Huffman-Baum inkrementiert.
 Dabei kann es passieren, dass der Huffman-Baum nicht mehr das
 Kriterium eines optimalen Codes erfüllt (siehe
 Abschnitt~\ref{sec:huffman}).  Deshalb muss nach jedem Symbol
-überprüft werden, ob dies der Fall ist, wenn ja muss der Huffman-Baum
+überprüft werden, ob dies der Fall ist, falls ja muss der Huffman-Baum
 neu angeordnet werden, wodurch sich die Codewörter ändern.
 
 \subsection{Dekodierung}
@@ -632,13 +628,6 @@ Reihenfolge befinden und kein Häufigkeitszähler darf kleiner als der
 Vorherige sein. Diese Eigenschaft wird auch
 \emph{Geschwister-Eigenschaft} (sibling property) genannt.
 
-In Abbildung~\ref{fig:HUPD0} ist ein korrekter Huffman-Baum
-dargestellt. Der Knoten unten rechts besitzt mit 4 den kleinsten
-Häufigkeitszähler, die Wurzel mit 60 den Größten. Geht man die Knoten
-von unten rechts nach oben links durch, erhält man die Häufigkeiten 7,
-8, 8, 8, 15, 16, 31, 39 und 60. Diese Folge ist monoton steigend, die
-Bedingung für einen Huffman-Baum trifft für diesen Baum also zu.
-
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
@@ -685,8 +674,15 @@ child {
   node[right] {31}
 };
 \end{tikzpicture}
-\caption{Ein korrekter Huffman-Baum} \label{fig:HUPD0}
+\caption{Ein korrekter Huffman-Baum} \label{fig:HCORR}
 \end{figure}
+
+In Abbildung~\ref{fig:HCORR} ist ein korrekter Huffman-Baum
+dargestellt. Der Knoten unten rechts besitzt mit 4 den kleinsten
+Häufigkeitszähler, die Wurzel mit 60 den Größten. Geht man die Knoten
+von unten rechts nach oben links durch, erhält man die Häufigkeiten 7,
+8, 8, 8, 15, 16, 31, 39 und 60. Diese Folge ist monoton steigend, die
+Bedingung für einen Huffman-Baum trifft für diesen Baum also zu.
 
 Es gibt einen einfachen rekursiven Algorithmus mit dem der
 Huffman-Baum aktualisiert werden kann. Er wird mit dem Blattknoten
@@ -708,6 +704,23 @@ aufgerufen. Der Algorithmus besteht aus den folgenden drei Schritten:
 \item Wenn $X$ der Wurzelknoten ist, stoppe die Ausführung, sonst
   führe den Algorithmus auf dem Elternknoten von $X$ aus.
 \end{enumerate}
+
+Abbildung~\ref{fig:HUPD} zeigt zwei Beispiele der Aktualsierung eines
+Huffman-Baums. Das erste Beispiel geht vom Huffman-Baum in
+Abbildung~\ref{fig:HCORR} aus und inkrementiert den Häufigkeitszähler
+für das Symbol $E$. Das Ergebnis der Aktualisierung sieht man in
+Abbildung~\ref{fig:HUPD1}: Der Häufigkeitszähler von $E$ steht nun auf
+8 und auch die Häufigkeiten der Elternknoten wurden jeweils
+inkrementiert.
+
+Im zweiten Beispiel wird $E$ erneut inkrementiert. Nun wird im
+1. Schritt des Aktualisierungs-Algorithmus festgestellt, dass der
+Knoten von $B$ beim Durchgehen von unten links nach oben rechts der
+letzte Knoten ist, der einen Häufigkeitszähler kleiner-gleich dem von
+$E$ ist. Also werden die beiden Knoten getauscht und der
+Häufigkeitszähler von $E$ erhöht. Beim Inkrementieren der Zähler der
+Elternknoten treten in diesem Fall keine weiteren Probleme auf. Das
+Ergebnis der Operation ist in Abbildung~\ref{fig:HUPD2} dargstellt.
 
 \begin{figure}[h]
 \centering
@@ -757,7 +770,7 @@ child {
 };
 \end{tikzpicture}
 \vspace{2ex}
-\caption{1. Inkrementierung von $E$}
+\caption{1. Inkrementierung von $E$} \label{fig:HUPD1}
 \end{subfigure}
 \begin{subfigure}[t]{0.45\textwidth}
 \begin{tikzpicture}[
@@ -806,19 +819,19 @@ child {
 \draw[<->, dashed] (Y.north west) to[out=130,in=50,looseness=1.5] (X.north east);
 \end{tikzpicture}
 \vspace{2ex}
-\caption{2. Inkrementierung von $E$}
+\caption{2. Inkrementierung von $E$} \label{fig:HUPD2}
 \end{subfigure}
 \vspace{2ex}
-\caption{Aktualisierung des Huffman-Baums} \label{fig:HUPD}
+\caption{Aktualisierung eines Huffman-Baums} \label{fig:HUPD}
 \end{figure}
 
 
 \subsection{Überlauf der Häufigkeitszähler} \label{sec:AHCOUNTER}
-Die Häufigkeitszähler für das Auftreten von Symbolen werden bei der
-adaptiven Huffman-Kodierung als Integer gespeichert. Abhängig von der
-Datenmenge kann es passieren, dass die auftretende Häufigkeit eines
-Symbols die Grenze des darstellbaren Zahlenbereiches überschreitet --
-es kommt zu einem Integerüberlauf.
+Die Häufigkeitszähler für das Auftrittshäufigkeit von Eingabesymbolen
+werden bei der adaptiven Huffman-Kodierung als Integer
+gespeichert. Abhängig von der Datenmenge kann es passieren, dass die
+auftretende Häufigkeit eines Symbols die Grenze des darstellbaren
+Zahlenbereiches überschreitet -- es kommt zu einem Integerüberlauf.
 
 Der darstellbare Zahlenbereich für Integer ist abhängig von der
 verwendeten Hardware. Mit modernen 64-Bit Rechnerarchitekturen ist die
@@ -841,15 +854,102 @@ Häufigkeitszähler neu skaliert. Dafür werden zunächst die
 Häufigkeitszähler aller Blätter des Huffman-Baums halbiert, was einer
 einfachen Rechtsshift-Operation enstpricht. Dann werden von den
 Blättern ausgehend bis zu Wurzel die Zähler aller Zwischenknoten mit
-der Summe der Kinderknoten aktualisiert.
+der Summe der Nachfolgerknoten aktualisiert.
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}[t]{0.45\textwidth}
+\centering
+\begin{tikzpicture}[
+  level 1/.style={sibling distance=3.3cm, level distance=1.5cm},
+  level 2/.style={sibling distance=1.4cm, level distance=1.5cm},
+]
+\node {930}
+child {
+  child {
+    node {A}
+    edge from parent
+    node[left] {310}
+  }
+  child {
+    node {B}
+    edge from parent
+    node[right] {310}
+  }
+  edge from parent
+  node[left] {620}
+}
+child {
+  child {
+    node {C}
+    edge from parent
+    node[left] {155}
+  }
+  child {
+    node {D}
+    edge from parent
+    node[right] {155}
+  }
+  edge from parent
+  node[right] {310}
+};
+\end{tikzpicture}
+
+\vspace{2ex}
+\caption{Vor der Skalierung} \label{fig:HSCAL1}
+\end{subfigure}
+\begin{subfigure}[t]{0.45\textwidth}
+\centering
+\begin{tikzpicture}[
+  level 1/.style={sibling distance=3.3cm, level distance=1.5cm},
+  level 2/.style={sibling distance=1.4cm, level distance=1.5cm},
+]
+\node {464}
+child {
+  child {
+    node {A}
+    edge from parent
+    node[left] {155}
+  }
+  child {
+    node {B}
+    edge from parent
+    node[right] {155}
+  }
+  edge from parent
+  node[left] {310}
+}
+child {
+  child {
+    node {C}
+    edge from parent
+    node[left] {77}
+  }
+  child {
+    node {D}
+    edge from parent
+    node[right] {77}
+  }
+  edge from parent
+  node[right,red] {154}
+};
+\end{tikzpicture}
+
+\vspace{2ex}
+\caption{Nach der Skalierung} \label{fig:HSCAL2}
+\end{subfigure}
+\vspace{2ex}
+\caption{Skalierung eines Huffman-Baums} \label{fig:HSCAL}
+\end{figure}
 
 Da durch die Integer-Divison Genauigkeit verloren geht, kann es
-passieren, dass der resultierende Baum kein Huffman-Baum mehr ist. Die
-Lösung dafür ist die vollständige Neuerstellung des Huffman-Baums nach
-jeder Skalierung. Aber selbst bei der Verwendung von 32-Bit Integern
-sollte dies nicht sehr häufig passieren.
-
-% Beispiel
+passieren, dass der resultierende Baum kein Huffman-Baum mehr ist. Ein
+Beispiel für diesen Fall ist in Abbildung~\ref{fig:HSCAL} zu sehen.
+Nach der Skalierung sind die Häufigkeitszähler nicht mehr aufsteigend
+geordnet, wenn man die Knoten von unten links nach oben rechts
+durchgeht. Die Lösung dafür ist die vollständige Neuerstellung des
+Huffman-Baums nach jeder Skalierung. Bei der Verwendung von 32-Bit
+Integern sollte dies nicht sehr häufig passieren.
 
 Die Skalierung der Zähler hat eine Auswirkung auf die Komprimierung,
 denn die Symbole, die nach der Skalierung gelesen werden, haben einen
@@ -860,13 +960,31 @@ von den kurz vohrer aufgetretenen Symbolen haben als von Symbolen, die
 weiter in der Vergangenheit aufgetreten sind.
 
 \subsection{Überlauf der Codeworte}
-Wie in Abschnitt xy beschrieben, wird die maximale Länge eines
-Codeworts von der Höhe des Huffman-Baums bestimmt.
+Ein weiteres Problem ist der mögliche Überlauf der Codewörter. Die
+Länge eines Codewortes ist abhängig davon, wie tief ein Blatt-Knoten
+für ein Symbol im Huffman-Baum liegt. Bei vielen verschieden
+Eingabesymbolen kann der Huffman-Baum große Höhe erreichen.
 
-% -> Salomon 5.2.7 Height of a Huffman Tree
-% Betrifft nur den Kodierprozess
+Aufgrund der Implementierung der Datenstruktur, die den Huffman-Baum
+repräsentiert, muss der Kodierer den Pfad von Blattknoten zur Wurzel
+durchschreiten, um ein Codewort zu erzeugen. Für die andere Richtung
+wäre eine Suche im Baum nach dem zu kodierenden Symbol nötig, was sehr
+ineffizient wäre. Weil das Codewort noch umgedreht werden muss, kann
+der Kodierer es nicht schon während des Durchlaufens des Baums
+ausgeben und muss es zwischenspeichern.
 
-\subsection{Algorithmus von Vitter}
+Wenn das Codewort als Integer zwischengespeichert wird, muss bachtet
+werden, dass es auch hier zu einem Überlauf kommen kann, wenn das
+Codewort zu lang ist. Die einfachste Möglichkeit das Problem zu
+umgehen ist die Verwendung einer verketteten Liste, um die Bits des
+Codeworts zwischenzuspeichern.  Der einzige Nachteil daran ist der
+höhere Speicherbedarf und Rechenaufwand.
+
+Der Dekodierer hat dieses Problem glücklicherweise nicht, denn er
+braucht das Codewort nicht zwischenzuspeichern, er kann bei jedem Bit,
+dass er liest, sofort zum linken oder rechten Nachfolger des aktuellen
+Knotens gehen, bis er einen Blattknoten erreicht hat und das
+zugehörige Symbol ausgeben kann.
 
 \section{Anwendungen}
 In der Praxis wird die Huffman-Kodierung in der adaptiven Variante zum

@@ -1,0 +1,190 @@
+\documentclass[xcolor=table,presentation]{beamer}    % ,handout
+% colortbl only defines \rowcolor for a single row. xcolor extends this to multiple rows.
+
+\usetheme[sectionoutline]{Aachen} %
+\usepackage[ngerman]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% tables
+\usepackage{multirow,array,tabularx,rotating}
+\usepackage{booktabs}
+
+% math
+\usepackage{amsmath,amsthm, amssymb, latexsym, xspace}
+\usepackage{bbold}
+%\usefonttheme[onlymath]{serif}
+%\boldmath
+
+% misc
+\usepackage{subfigure}
+\usepackage{wasysym}
+\usepackage{nameref}
+
+% declare the path(s) where your graphic files are
+\graphicspath{./bilder/}
+% and their extensions so you won't have to specify these with
+% every instance of \includegraphics
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+
+% helpers
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand*{\email}{\url{thomas.gatzweiler@rwth-aachen.de}}
+% all email address(es) of the authors (used for \TitlePage)
+
+\title[Adaptive Huffman-Kodierung und Anwendungen]{Adaptive Huffman-Kodierung und Anwendugen}
+
+\setbeamertemplate{navigation symbols}{} %disable navigation bar
+
+%% author and in []: shortauthor
+\author[Gatzweiler]{Thomas Gatzweiler}
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+\institute[RWTH Aachen University] % (optional, but mostly needed)
+{
+%  \inst{1}%
+  \strut Human Language Technology and Pattern Recognition\\
+  \strut Computer Science Department, RWTH Aachen University %\\
+  %\strut {\tt lehnen@cs.rwth-aachen.de}
+}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date[12. November 2014]{Proseminar Datenkompression, 12. November 2014, Aachen}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% will be set into the PDF document summary
+\hypersetup{
+  pdftitle={\inserttitle}, 
+  pdfauthor={\insertauthor}, 
+  bookmarksdepth=subsubsection,  
+  % enable automatic page transitions: for endless loop edit in
+  % acrobat reader -> preferences -> full screen -> after every X
+  % seconds and after last page
+  %pdfpageduration = 2, 
+  % pdfpagetransition = {Glitter /Di 315 /D 5}  
+  % pdfpagetransition = {Box /M /O /D 1},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+% Literaturverzeichnis wie in der .bib Datei ordnen
+\nocite{*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[label=titlepage]
+  \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% use this, if you use option nosectionoutline
+%
+% \begin{frame}<*>{\iflanguage{ngerman}{Gliederung}{Outline}}
+%       \tableofcontents[subsectionstyle=show/show/show]
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Einführung} \label{sec:intro}
+\begin{frame}{\insertsection}
+Bla Bla Bla
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{Literatur}
+ %\bibliographystyle{alpha}
+ \bibliographystyle{i6bibliostyle}
+ \bibliography{references}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Huffman-Kodierung}
+
+\subsection{Huffman-Baum}
+\begin{frame}[fragile]{\insertsection: \insertsubsection}
+Für das Paket bieten wir zwei Optionen an.
+ \begin{itemize}
+  \item \verb+\usetheme[sectionoutline]{Aachen}+
+  \item \verb+\usetheme[nosectionoutline]{Aachen}+
+ \end{itemize}
+Mit \emph{sectionoutline} werden ab dem zweiten Abschnitt eine Gliederung vor den Abschnitt
+eingefügt, wenn das Kommando \verb+\section+ und nicht das Kommando \verb+\section*+ benutzt wurde.
+Dies gibt dem Hörer eine Information zum Fortschritt, ordnet das Gehörte ein und sorgt für eine
+kleine rhetorische Pause.
+\end{frame}
+
+\subsection{Bilder}
+\begin{frame}{\insertsection: \insertsubsection}
+\begin{center}
+ \includegraphics[width=.5\linewidth]{logos/rwth-hks44}
+\end{center}
+\end{frame}
+
+\subsection{Cite}
+\begin{frame}{\insertsection: \insertsubsection}
+Wie beschrieben in \cite{sayood96} oder \cite{salomon2007}
+\end{frame}
+
+\subsection{Overlay}
+\begin{frame}{\insertsection: \insertsubsection}
+Bitte verwenden Sie Overlays nur moderat. Sie sind nicht immer hilfreich.
+\begin{enumerate}
+ \item<1> Eins 
+ \item<2> Zwei
+\end{enumerate}
+\begin{itemize}
+ \item Pause \pause
+ \item Pause \pause
+\end{itemize}
+\begin{description}
+ \item[dieses] \empho<3>{jenes}
+ \item[solches] \empho<4>{und anderes}
+\end{description}
+Ende
+
+Es gibt auch noch einige andere overlay Kommandos in der beamer Dokumentation.
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Zweiter Abschnitt} \label{sec:zweite}
+\subsection{Overlay}
+\begin{frame}{\insertsection: \insertsubsection}
+ zweiter Abschnitt
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[label=finalSlide]
+  \label{LastPage}%
+  \begin{center}
+    \vfill
+    {\Large
+    \textcolor{i6blue}{Danke für die Aufmerksamkeit!}
+    }
+%     \vfill
+%     \inserttitle
+    \vfill
+    {\Large \insertauthor}
+    \vfill
+    \email{}
+  \end{center}
+\end{frame}
+
+\end{document}

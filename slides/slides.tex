@@ -600,10 +600,14 @@ Escape-Code: {\tt001}
 \subsection{Textkompression}
 
 \begin{frame}[<+->]{\insertsubsection}
-
+  \begin{witemize}
+  \item Einfachster Anwendungsfall
+  \item Festes Eingabealphabet
+  \item Korrellationen zwischen Silben und Wörtern unberücksichtigt
+  \end{witemize}
 \end{frame}
 
-\subsection{Bildkompression}
+\subsection{Verlustfreie Bildkompression}
 
 \begin{frame}[<+->]{\insertsubsection}
 \begin{witemize}
@@ -643,14 +647,15 @@ Escape-Code: {\tt001}
 \end{figure}
 \end{frame}
 
-\subsection{Audiokompression}
+\subsection{Verlustfreie Audiokompression}
 \begin{frame}[<+->]{\insertsection}
 \begin{witemize}
-\item test
+\item 16-Bit Samples: 65536 verschiedene Eingabesymbole
+\item Sehr großer Huffman-Baum
+\item Relativ geringe Komprimierung
+\item In Realität nicht praktikabel
 \end{witemize}
 \end{frame}
-
-\end{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -669,3 +674,5 @@ Escape-Code: {\tt001}
     \email{}
   \end{center}
 \end{frame}
+
+\end{document}

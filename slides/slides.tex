@@ -23,6 +23,28 @@
 \usepackage{wasysym}
 \usepackage{nameref}
 
+\usepackage{tikz}
+\usetikzlibrary{trees,calc}
+\usepackage[absolute,overlay]{textpos}
+
+\tikzset{
+grow=down,
+level 1/.style={sibling distance=7cm, level distance=3cm},
+level 2/.style={sibling distance=7cm, level distance=3cm},
+level 3/.style={sibling distance=7cm, level distance=3cm},
+level 4/.style={sibling distance=7cm, level distance=3cm},
+edge/.style={thick},
+edge from parent path={
+(\tikzparentnode) |-
+($(\tikzparentnode)!0.5!(\tikzchildnode)$) -|
+(\tikzchildnode)},
+}
+
+\tikzstyle{end} = [circle, minimum width=5pt, fill, inner sep=0pt]
+
+\renewcommand*\ttdefault{txtt}
+
+
 % declare the path(s) where your graphic files are
 \graphicspath{./bilder/}
 % and their extensions so you won't have to specify these with
@@ -74,7 +96,12 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pdfpcnotes}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{witemize}{\itemize\setlength{\itemsep}{0.5em}}{\enditemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,7 +126,8 @@
 
 \section{Einführung} \label{sec:intro}
 \begin{frame}{\insertsection}
-Bla Bla Bla
+Hello World
+\pnote{bla bla bla}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -114,72 +142,209 @@ Bla Bla Bla
 
 \section{Huffman-Kodierung}
 
+\begin{frame}[<+->]{\insertsection}
+  \pnote{Grundlage für die adaptive Huffman-Kodierung}
+  \begin{witemize}
+    \item 1952 von David Huffman entwickelt
+    \item Erzeugt präfixfreien Code
+      \begin{itemize}
+        \item{Kein Codewort ist Präfix eines anderen Codeworts}
+      \end{itemize}
+      \pnote{Vorteil: Codewörter lassen sich direkt hintereinander schreiben}
+    \item Entropiekodierung
+      \begin{itemize}
+        \item Häufige Symbole $\Rightarrow$ Kurze Codewörter
+        \item Seltene Symbole $\Rightarrow$ Lange Codewörter
+      \end{itemize}
+    \item Verlustfreie Komprimierung
+  \end{witemize}
+\end{frame}
+
 \subsection{Huffman-Baum}
-\begin{frame}[fragile]{\insertsection: \insertsubsection}
-Für das Paket bieten wir zwei Optionen an.
- \begin{itemize}
-  \item \verb+\usetheme[sectionoutline]{Aachen}+
-  \item \verb+\usetheme[nosectionoutline]{Aachen}+
- \end{itemize}
-Mit \emph{sectionoutline} werden ab dem zweiten Abschnitt eine Gliederung vor den Abschnitt
-eingefügt, wenn das Kommando \verb+\section+ und nicht das Kommando \verb+\section*+ benutzt wurde.
-Dies gibt dem Hörer eine Information zum Fortschritt, ordnet das Gehörte ein und sorgt für eine
-kleine rhetorische Pause.
+
+\begin{frame}[<+->]{\insertsubsection}
+  \begin{witemize}
+  \item Zentrale Datenstruktur für Kodierung und Dekodierung
+  \item Binärbaum zur Erzeugung eines binären Codes
+    \pnote{Lässt sich auch auf andere Zahlensysteme anwenden}
+  \item Wahrscheinlichkeitsverteilung des Eingabealphabets muss bekannt sein
+    \pnote{Wahrscheinlichkeiten können geschätzt oder vorher ermittelt werden}
+  \item Aufbau von des Baums unten nach oben
+    \pnote{Kodierung ist präfixfrei, da die Symbole nur in den Blättern stehen}
+  \end{witemize}
 \end{frame}
 
-\subsection{Bilder}
-\begin{frame}{\insertsection: \insertsubsection}
-\begin{center}
- \includegraphics[width=.5\linewidth]{logos/rwth-hks44}
-\end{center}
+\begin{frame}[<+->]{\insertsubsection: Konstruktion}
+  \begin{witemize}
+  \item Sortierung der Liste des Eingabealphabets nach Wahrscheinlichkeiten
+  \item Die zwei seltensten Symbole werden aus der Liste entfernt
+  \item Erzeugung je eines Blattknotens für die zwei Symbole
+  \item Erzeugung eines Elternknotens für die zwei Blattknoten
+  \item Einfügen eines Hilfssymbols mit der summiertern
+    Wahrscheinlichkeit beider Symbole in 
+  \end{witemize}
 \end{frame}
 
-\subsection{Cite}
-\begin{frame}{\insertsection: \insertsubsection}
-Wie beschrieben in \cite{sayood96} oder \cite{salomon2007}
+\begin{frame}[fragile]{\insertsubsection: Beispiel}
+
+\begin{textblock}{5}(10,3)
+\begin{flushright}
+\begin{tabular}{l|l}
+$a_i$ & $\mathrm{P}(a_i)$ \\ \hline
+\only<1>
+{A & 0.20 \\
+B & 0.02 \\
+C & 0.08 \\
+D & 0.10 \\
+E & 0.60}\only<2>
+{E & 0.60 \\
+A & 0.20 \\
+D & 0.10 \\
+C & 0.08 \\
+B & 0.02}\only<3>
+{E & 0.60 \\
+A & 0.20 \\
+D & 0.10 \\
+\color{red}C & \color{red}0.08 \\
+\color{red}B & \color{red}0.02}\only<4>
+{E & 0.60 \\
+A & 0.20 \\
+D & 0.10 \\
+\color{green}\{C, B\} & \color{green}0.10}\only<5>
+{E & 0.60 \\
+A & 0.20}\only<6>
+{E & 0.60 \\
+A & 0.20 \\
+\{B, C, D\} & 0.20}\only<7>
+{E & 0.60}\only<8>
+{E & 0.60 \\
+\{A, B, C, D\} & 0.40}\only<9>{}\only<10>
+{\{A, B, C, D, E\} & 1.00}
+\end{tabular}
+\end{flushright}
+\end{textblock}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\tikzstyle{lvl3}=[transparent]
+\tikzstyle{lvl2}=[transparent]
+\tikzstyle{lvl1}=[transparent]
+\tikzstyle{lvl0}=[transparent]
+\only<3->{\tikzstyle{lvl0}=[opaque]}
+\only<5->{\tikzstyle{lvl1}=[opaque]}
+\only<7->{\tikzstyle{lvl2}=[opaque]}
+\only<9->{\tikzstyle{lvl3}=[opaque]}
+\node[lvl3] {\{A, B, C, D, E\}}
+child[lvl3] {
+  node {E}
+  edge from parent
+  node[left] {\scriptsize $0.60$}
+}
+child[lvl3] {
+  node[lvl2] {\{A, B, C, D\}}
+  child[lvl2] {
+    node {A}
+    edge from parent
+    node[left] {\scriptsize $0.20$}
+  }
+  child[lvl2] {
+    node[lvl1] {\{B, C, D\}}
+    child[lvl1] {
+      node {D}
+      edge from parent
+      node[left] {\scriptsize $0.10$}
+    }
+    child[lvl1] {
+      node[lvl0] {\{C, B\}}
+      child[lvl0] {
+        node {C}
+        edge from parent
+        node[left] {\scriptsize $0.08$}
+      }
+      child[lvl0] {
+        node {B}
+        edge from parent
+        node[right] {\scriptsize $0.02$}
+      }
+      edge from parent
+      node[right] {\scriptsize $0.10$}
+    }
+    edge from parent
+    node[right] {\scriptsize $0.20$}
+  }
+  edge from parent
+  node[right] {\scriptsize $0.40$}
+};
+\end{tikzpicture}
+\end{figure}
 \end{frame}
 
-\subsection{Overlay}
-\begin{frame}{\insertsection: \insertsubsection}
-Bitte verwenden Sie Overlays nur moderat. Sie sind nicht immer hilfreich.
-\begin{enumerate}
- \item<1> Eins 
- \item<2> Zwei
-\end{enumerate}
-\begin{itemize}
- \item Pause \pause
- \item Pause \pause
-\end{itemize}
-\begin{description}
- \item[dieses] \empho<3>{jenes}
- \item[solches] \empho<4>{und anderes}
-\end{description}
-Ende
+\subsection{Kodierung}
 
-Es gibt auch noch einige andere overlay Kommandos in der beamer Dokumentation.
+\subsection{Dekodierung}
+
+\section{Adaptive Huffman-Kodierung}
+
+\section{Anwendungen}
+
+\subsection{Textkompression}
+
+\begin{frame}{\insertsubsection}
+
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Bildkompression}
 
-\section{Zweiter Abschnitt} \label{sec:zweite}
-\subsection{Overlay}
-\begin{frame}{\insertsection: \insertsubsection}
- zweiter Abschnitt
+\begin{frame}{\insertsubsection}
+\begin{witemize}
+\item Keine Kompression bei 1-Bit Schwarz-Weiß-Bildern möglich
+  \begin{itemize}
+    \item {\tt0}: Schwarz, {\tt1}: Weiß
+  \end{itemize}
+
+\item Einfachster Fall: 8-Bit Graustufenbilder
+  \begin{itemize}
+    \item {\tt0}: Schwarz, {\tt1-254}: Graustufen, {\tt255}: Weiß
+  \end{itemize}
+
+\item Farbbilder
+  \begin{itemize}
+    \item Ein Huffman-Baum pro Farbkanal möglich
+    \item Korrelation zwischen Farbkanälen bleibt unberücksichtigt
+  \end{itemize}
+\end{witemize}
 \end{frame}
 
+\begin{frame}{\insertsubsection}
+\begin{figure}[T]
+  \centering
+  \includegraphics[width=0.470\textwidth]{bilder/moon.jpg}
+  \hfill
+  \includegraphics[width=0.520\linewidth]{bilder/moon_hist.eps}
+\end{figure}
+\end{frame}
 
+\begin{frame}{\insertsubsection}
+\begin{figure}[T]
+  \centering
+  \includegraphics[width=0.470\textwidth]{bilder/uniformnoise.png}
+  \hfill
+  \includegraphics[width=0.520\linewidth]{bilder/uniformnoise_hist.eps}
+\end{figure}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[label=finalSlide]
-  \label{LastPage}%
+  \label{LastPage}
   \begin{center}
     \vfill
     {\Large
     \textcolor{i6blue}{Danke für die Aufmerksamkeit!}
     }
-%     \vfill
-%     \inserttitle
+     \vfill
+     \inserttitle
     \vfill
     {\Large \insertauthor}
     \vfill

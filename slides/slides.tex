@@ -63,7 +63,7 @@ edge from parent path={
 \renewcommand*{\email}{\url{thomas.gatzweiler@rwth-aachen.de}}
 % all email address(es) of the authors (used for \TitlePage)
 
-\title[Adaptive Huffman-Kodierung und Anwendungen]{Adaptive Huffman-Kodierung und Anwendugen}
+\title[Huffman-Kodierung]{Adaptive Huffman-Kodierung und Anwendungen}
 
 \setbeamertemplate{navigation symbols}{} %disable navigation bar
 
@@ -86,14 +86,14 @@ edge from parent path={
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % will be set into the PDF document summary
 \hypersetup{
-  pdftitle={\inserttitle}, 
-  pdfauthor={\insertauthor}, 
-  bookmarksdepth=subsubsection,  
+  pdftitle={\inserttitle},
+  pdfauthor={\insertauthor},
+  bookmarksdepth=subsubsection,
   % enable automatic page transitions: for endless loop edit in
   % acrobat reader -> preferences -> full screen -> after every X
   % seconds and after last page
-  %pdfpageduration = 2, 
-  % pdfpagetransition = {Glitter /Di 315 /D 5}  
+  %pdfpageduration = 2,
+  % pdfpagetransition = {Glitter /Di 315 /D 5}
   % pdfpagetransition = {Box /M /O /D 1},
 }
 
@@ -144,39 +144,47 @@ edge from parent path={
 
 \section{Huffman-Kodierung}
 
-\begin{frame}[<+->]{\insertsection}
+\begin{frame}{\insertsection}
+  \begin{textblock}{8}(9,4.5)
+    \begin{figure}
+      \includegraphics[width=6cm]{bilder/huffman.jpg}
+    \end{figure}
+  \end{textblock}
+
   \pnote{Grundlage für die adaptive Huffman-Kodierung}
   \begin{witemize}
     \item 1952 von David Huffman entwickelt
-    \item Erzeugt einen präfixfreien Code
-      \begin{itemize}
-        \item{Kein Codewort ist Präfix eines anderen Codeworts}
-      \end{itemize}
-      \pnote{Vorteil: Codewörter lassen sich direkt hintereinander schreiben}
+    \pnote{Huffman: amerikanischer Informatiker 1925-1999}
     \item Entropiekodierung
       \begin{itemize}
-        \item Häufige Symbole $\Rightarrow$ Kurze Codewörter
         \item Seltene Symbole $\Rightarrow$ Lange Codewörter
+        \item Häufige Symbole $\Rightarrow$ Kurze Codewörter
       \end{itemize}
     \item Verlustfreie Komprimierung
+    \item Erzeugt präfixfreien Code
+      \pnote{David Huffman: 1925-1999}
+      \pnote{Entropiekodierung: stochastische Kodierung}
+      \pnote{Symbole aus einem Eingabealphabet werden Codewörter zugewiesen}
+      \pnote{Kein Codewort ist Präfix eines anderen Codeworts}
+      \pnote{Vorteil: Codewörter lassen sich direkt hintereinander schreiben}
   \end{witemize}
 \end{frame}
 
 \subsection{Huffman-Baum}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
   \begin{witemize}
-  \item Zentrale Datenstruktur für Kodierung und Dekodierung
-  \item Binärbaum zur Erzeugung eines binären Codes
+  \item Zentrale Datenstruktur
+  \item Binärbaum $\Rightarrow$ binärer Codes
     \pnote{Lässt sich auch auf andere Zahlensysteme anwenden}
-  \item Wahrscheinlichkeitsverteilung des Eingabealphabets muss bekannt sein
+  \item Basiert auf Wahrscheinlichkeitsverteilung des Eingabealphabets
     \pnote{Wahrscheinlichkeiten können geschätzt oder vorher ermittelt werden}
-  \item Aufbau von des Baums unten nach oben
+  \item Aufbau von unten nach oben
     \pnote{Kodierung ist präfixfrei, da die Symbole nur in den Blättern stehen}
   \end{witemize}
 \end{frame}
 
-\begin{frame}[<+->]{\insertsubsection: Konstruktion}
+\begin{frame}{\insertsubsection: Konstruktion}
   \begin{witemize}
   \item Sortierung der Liste des Eingabealphabets nach Wahrscheinlichkeiten
   \item Die zwei seltensten Symbole werden aus der Liste entfernt
@@ -301,16 +309,15 @@ child[lvl6] {
 \end{tikzpicture}
 \end{frame}
 
+
 \subsection{Kodierung}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
   \begin{witemize}
-  \item Codewort-Erzeugung aus dem Pfad von der Wurzel zum Blatt
-    \begin{itemize}
-    \item Linker Teilbaum: {\tt1} wird angehängt
-    \item Rechter Teilbaum: {\tt0} wird angehängt
-    \item Oder umgekehrt (Implementationsabhängig)
-    \end{itemize}
+  \item Codewort: Pfad von der Wurzel zum Blatt
+  \item Linker Teilbaum: {\tt1} wird angehängt
+  \item Rechter Teilbaum: {\tt0} wird angehängt
+  \item Oder umgekehrt (implementationsabhängig)
   \end{witemize}
 \end{frame}
 
@@ -401,15 +408,17 @@ child {
 
 \subsection{Dekodierung}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
   \begin{witemize}
-  \item Huffman-Baum oder Wahrscheinlichkeitsverteilung wird benötigt
-  \item Aufbau des Huffman-Baums genau wie beim Kodierer
+  \item Benötigt Huffman-Baum oder Wahrscheinlichkeitsverteilung
+    \pnote{Baum oder Verteilung muss mit den kodierten Daten
+      gespeichert oder übertragen werden}
+  \item Aufbau des Huffman-Baums wie beim Kodierer
   \item Dekodierer startet bei der Wurzel, ließt die Daten bitweise
     \begin{itemize}
     \item {\tt1} eingelesen: Zum linken Nachfolger gehen
     \item {\tt0} eingelesen: Zum rechten Nachfolger gehen
-    \item Oder umgekehrt (gleiches Verhalten wie beim Kodierer notwendig)
+    \item Oder umgekehrt (wie beim Kodierer)
     \end{itemize}
   \item Blatt erreicht: Symbol ausgeben und zur Wurzel zurückkehren
   \end{witemize}
@@ -417,13 +426,11 @@ child {
 
 \section{Adaptive Huffman-Kodierung}
 
-\begin{frame}[<+->]{\insertsection}
+\begin{frame}{\insertsection}
   \begin{witemize}
   \item Huffman-Kodierung:
     \begin{itemize}
-      \item Wahrscheinlichkeitsverteilung muss
-        bekannt sein
-      \item Bestimmung in zusätzlichem Durchgang
+      \item Wahrscheinlichkeitsverteilung muss bekannt sein
       \item Echtzeitkodierung nicht möglich
     \end{itemize}
   \item Lösung: Adaptive Huffman-Kodierung
@@ -431,36 +438,35 @@ child {
     \item 1973 von Newton Faller und 1978 von Robert Gallager
       unabhängig entwickelt
     \item 1985 von Donald Knuth wesentlich verbessert
-    \item Basiert auf der Huffman-Kodierung
+    \pnote{Basiert auf der Huffman-Kodierung}
     \item Kodierung ohne Verzögerung, in einem Durchgang
-    \item Jedes Eingangssymbol erzeugt sofort ein Codewort
+    \pnote{Jedes Eingangssymbol erzeugt sofort ein Codewort}
     \item Passt sich laufend der Häufigkeitsverteilung an
     \end{itemize}
   \end{witemize}
 \end{frame}
 
-\begin{frame}[<+->]{\insertsection}
+\begin{frame}{\insertsection}
   \begin{witemize}
   \item Start mit leerem Huffman-Baum
   \item Knoten haben Häufigkeitszähler (Integer)
-  \item Aktualisierung des Huffman-Baums bei neuen Eingabesymbolen und
-    neuer Häufigkeitsverteilung
-  \item Kodierer und Dekodierer müssen Operationen auf den
-    Huffman-Baum exakt spiegeln
+  \item Neue Häufigkeitsverteilung $\Rightarrow$ Aktualisierung des
+    Huffman-Baums
+  \item Kodierer und Dekodierer spiegeln Operationen auf Huffman-Baum
   \end{witemize}
 \end{frame}
 
 \subsection{Kodierung}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
   \begin{witemize}
-  \item Unbekannte Symbole:
+  \item Unbekanntes Symbol:
     \begin{itemize}
-    \item In den Huffman-Baum einfügen
     \item Unkodiert ausgeben
+    \item In den Huffman-Baum einfügen
     \end{itemize}
 
-  \item Bekannte Symbole:
+  \item Bekanntes Symbol:
     \begin{itemize}
     \item Codewort ausgeben
     \item Huffman-Baum aktualisieren
@@ -470,28 +476,28 @@ child {
 
 \subsection{Dekodierung}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
   \begin{witemize}
   \item Spiegelt die Änderungen des Huffman-Baums vom Kodierer
-  \item Unkomprimiertes Symbol:
+  \item Unkodiertes Symbol:
     \begin{itemize}
-      \item In den Huffman-Baum einfügen
       \item Direkt wieder ausgeben
+      \item In den Huffman-Baum einfügen
     \end{itemize}
-  \item Komprimiertes Symbol:
+  \item Kodiertes Symbol:
     \begin{itemize}
-      \item Dekodiertes Symbol ausgeben
-      \item Huffman-Baum aktualisieren
+    \item Dekodiertes Symbol ausgeben
+    \item Huffman-Baum aktualisieren
     \end{itemize}
   \end{witemize}
 \end{frame}
 
-\begin{frame}[<+->]{\insertsection}
+\begin{frame}{\insertsection}
   \begin{witemize}
-    \item Wie kann der Dekodierer zwischen Codewörtern und unkodierten
-      Symbolen unterscheiden?
-    \item Lösung: Benutzung eines Escape-Codes
-    \item Neues Problem:
+    \item Problem: Unterscheidung von Codewörtern und unkodierten
+      Symbolen
+    \item Lösung: Benutzung eines speziellen Escape-Codes
+    \item Neue Probleme:
       \begin{itemize}
       \item Escape-Code darf kein Codewort und kein Präfix davon sein
       \item Codewörter ändern sich laufend
@@ -537,26 +543,77 @@ child {
 \end{tikzpicture}
 \end{figure}
 Escape-Code: {\tt001}
+\pnote{Vorteile der Verwaltung des Escape-Codes im Huffman-Baum}
 \end{frame}
 
 \subsection{Aktualisierung des Huffman-Baums}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
   \begin{witemize}
-  \item Huffman-Baum muss nach jeder Aktualisierung geprüft werden
-    \item Häufigkeiten müssen monoton steigend sein, von links unten nach
-      rechts oben
-  \item Wenn notwendig Huffman-Baum ändern
+  \item Häufigkeiten müssen monoton steigen, \\
+    zeilenweise von rechts unten nach links oben
+  \item Prüfung des Huffman-Baums bei jeder Änderung
+  \item Wenn notwendig Huffman-Baum anpassen
   \end{witemize}
 \end{frame}
 
-\begin{frame}[<+->]{\insertsubsection: Algorithmus}
+\begin{frame}{\insertsubsection}
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\node {70}[
+level 1/.style={sibling distance=8cm, level distance=3.5cm},
+level 2/.style={sibling distance=6cm, level distance=3.5cm},
+level 3/.style={sibling distance=3cm, level distance=3.5cm},
+]
+child {
+  node[leaf] {A}
+  edge from parent
+  node[left] {39}
+}
+child {
+  child {
+    child {
+      node[leaf] {B}
+      edge from parent
+      node[left] {8}
+    }
+    child {
+      node[leaf] {C}
+      edge from parent
+      node[right] {8}
+    }
+    edge from parent
+    node[left] {16}
+  }
+  child {
+    child {
+      node[leaf] {D}
+      edge from parent
+      node[left] {8}
+    }
+    child {
+      node[leaf] {E}
+      edge from parent
+      node[right] {7}
+    }
+    edge from parent
+    node[right] {15}
+  }
+  edge from parent
+  node[right] {31}
+};
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}{\insertsubsection: Algorithmus}
   Der Häufigkeitszähler $F$ von Blattknoten $X$ soll inkrementiert werden.
 
   \vspace{1cm}
 
   \begin{enumerate}
-  \item Existiert von links unten nach rechts oben gesehen ein
+  \item Existiert von rechts unten nach links oben gesehen ein
     Nachfolger von $X$ mit einem Häufigkeitszähler $\leq F$, tausche
     $X$ mit dem letzen dieser Nachfolger.
 
@@ -568,13 +625,164 @@ Escape-Code: {\tt001}
   \end{enumerate}
 \end{frame}
 
+\begin{frame}{\insertsubsection}
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\node {70}[
+level 1/.style={sibling distance=8cm, level distance=3.5cm},
+level 2/.style={sibling distance=6cm, level distance=3.5cm},
+level 3/.style={sibling distance=3cm, level distance=3.5cm},
+]
+child {
+  node[leaf] {A}
+  edge from parent
+  node[left] {39}
+}
+child {
+  child {
+    child {
+      node[leaf] {B}
+      edge from parent
+      node[left] {8}
+    }
+    child {
+      node[leaf] {C}
+      edge from parent
+      node[right] {8}
+    }
+    edge from parent
+    node[left] {16}
+  }
+  child {
+    child {
+      node[leaf] {D}
+      edge from parent
+      node[left] {8}
+    }
+    child {
+      node[leaf] {E}
+      edge from parent
+      node[right] {7}
+    }
+    edge from parent
+    node[right] {15}
+  }
+  edge from parent
+  node[right] {31}
+};
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}{\insertsubsection}
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\node {71}[
+level 1/.style={sibling distance=8cm, level distance=3.5cm},
+level 2/.style={sibling distance=6cm, level distance=3.5cm},
+level 3/.style={sibling distance=3cm, level distance=3.5cm},
+]
+child {
+  node[leaf] {A}
+  edge from parent
+  node[left] {39}
+}
+child {
+  child {
+    child {
+      node[leaf] {B}
+      edge from parent
+      node[left] {8}
+    }
+    child {
+      node[leaf] {C}
+      edge from parent
+      node[right] {8}
+    }
+    edge from parent
+    node[left] {16}
+  }
+  child {
+    child {
+      node[leaf] {D}
+      edge from parent
+      node[left] {8}
+    }
+    child {
+      node[leaf] {E}
+      edge from parent
+      node[right] {8}
+    }
+    edge from parent
+    node[right] {16}
+  }
+  edge from parent
+  node[right] {32}
+};
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}{\insertsubsection}
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+level 1/.style={sibling distance=8cm, level distance=3.5cm},
+level 2/.style={sibling distance=6cm, level distance=3.5cm},
+level 3/.style={sibling distance=3cm, level distance=3.5cm},
+]
+\node {72}
+child {
+  node[leaf]{A}
+  edge from parent
+  node[left] {39}
+}
+child {
+  child {
+    child {
+      node[leaf](X) {E}
+      edge from parent
+      node[left] {9}
+    }
+    child {
+      node[leaf] {C}
+      edge from parent
+      node[right] {8}
+    }
+    edge from parent
+    node[left] {17}
+  }
+  child {
+    child {
+      node[leaf] {D}
+      edge from parent
+      node[left] {8}
+    }
+    child {
+      node[leaf](Y) {B}
+      edge from parent
+      node[right] {8}
+    }
+    edge from parent
+    node[right] {16}
+  }
+  edge from parent
+  node[right] {33}
+};
+\draw[<->, dashed, ultra thick] (Y.north west) to[out=130,in=50,looseness=1.5] (X.north east);
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
 \subsection{Überlauf der Häufigkeitszähler}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
   \begin{witemize}
-  \item Häufigkeitszähler werden als Integer gespeichert
-  \item Große Datenmengen können zum Integerüberlauf führen
-  \item Lösung: Skalierung der Häufigkeitszähler zur Verhinderung
+  \item Häufigkeitszähler sind Integer
+  \item Integerüberlauf bei großen Datenmengen
+  \item Lösung: Skalierung der Häufigkeitszähler
     \begin{itemize}
     \item Häufgkeitszähler werden durch 2 geteilt $\Rightarrow$ Right-Shift
     \item Huffmanbaum muss evtl. neu geordnet werden
@@ -582,9 +790,89 @@ Escape-Code: {\tt001}
   \end{witemize}
 \end{frame}
 
+\begin{frame}{\insertsubsection}
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+level 1/.style={sibling distance=8cm, level distance=3.5cm},
+level 2/.style={sibling distance=3cm, level distance=3.5cm},
+]
+\node {930}
+child {
+  child {
+    node {A}
+    edge from parent
+    node[left] {310}
+  }
+  child {
+    node {B}
+    edge from parent
+    node[right] {310}
+  }
+  edge from parent
+  node[left] {620}
+}
+child {
+  child {
+    node {C}
+    edge from parent
+    node[left] {155}
+  }
+  child {
+    node {D}
+    edge from parent
+    node[right] {155}
+  }
+  edge from parent
+  node[right] {310}
+};
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+\begin{frame}{\insertsubsection}
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+level 1/.style={sibling distance=8cm, level distance=3.5cm},
+level 2/.style={sibling distance=3cm, level distance=3.5cm},
+]
+\node {464}
+child {
+  child {
+    node[leaf] {A}
+    edge from parent
+    node[left] {155}
+  }
+  child {
+    node[leaf] {B}
+    edge from parent
+    node[right] {155}
+  }
+  edge from parent
+  node[left] {310}
+}
+child {
+  child {
+    node[leaf] {C}
+    edge from parent
+    node[left] {77}
+  }
+  child {
+    node[leaf] {D}
+    edge from parent
+    node[right] {77}
+  }
+  edge from parent
+  node[right,red] {\textbf{154}}
+};
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
 \section{Anwendungen}
 
-\begin{frame}[<+->]{\insertsection}
+\begin{frame}{\insertsection}
   \begin{witemize}
   \item Huffman-Kodierung wird meist adaptiv verwendet
   \item Häufig Teil eines mehrstufigen Prozesses
@@ -599,7 +887,7 @@ Escape-Code: {\tt001}
 
 \subsection{Textkompression}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
   \begin{witemize}
   \item Einfachster Anwendungsfall
   \item Festes Eingabealphabet
@@ -607,21 +895,67 @@ Escape-Code: {\tt001}
   \end{witemize}
 \end{frame}
 
+
+\begin{frame}{\insertsubsection}
+  \begin{columns}[T]
+    \column{.5\textwidth}
+    \begin{tabular}{c|c|l}
+      $a_i$ & $P(a_i)$ & $C(a_i)$ \\ \hline
+      E & $0.1740$ & {\tt111} \\
+      N & $0.0978$ & {\tt001} \\
+      I & $0.0755$ & {\tt1101} \\
+      S & $0.0727$ & {\tt1011} \\
+      R & $0.0700$ & {\tt1010} \\
+      A & $0.0651$ & {\tt1001} \\
+      T & $0.0615$ & {\tt0111} \\
+      D & $0.0508$ & {\tt0101} \\
+      H & $0.0476$ & {\tt0001} \\
+      U & $0.0435$ & {\tt0000} \\
+      L & $0.0344$ & {\tt10001} \\
+      C & $0.0306$ & {\tt10000} \\
+      G & $0.0301$ & {\tt01101} \\
+      M & $0.0253$ & {\tt01001} \\
+    \end{tabular}
+
+    \column{.5\textwidth}
+    \begin{tabular}{c|c|l}
+      $a_i$ & $P(a_i)$ & $C(a_i)$ \\ \hline
+      O & $0.0251$ & {\tt01000} \\
+      W & $0.0189$ & {\tt110001} \\
+      B & $0.0189$ & {\tt110010} \\
+      F & $0.0166$ & {\tt110000} \\
+      K & $0.0121$ & {\tt011000} \\
+      Z & $0.0113$ & {\tt1100111} \\
+      P & $0.0079$ & {\tt1100110} \\
+      V & $0.0067$ & {\tt0110011} \\
+      ß & $0.0031$ & {\tt01100100} \\
+      J & $0.0027$ & {\tt011001011} \\
+      Y & $0.0004$ & {\tt0110010100} \\
+      X & $0.0003$ & {\tt01100101011} \\
+      Q & $0.0002$ & {\tt01100101010}
+    \end{tabular}
+  \end{columns}
+  \vspace{15pt}
+  \emph{Kompressionsrate: 82.5\%}
+\end{frame}
+
 \subsection{Verlustfreie Bildkompression}
 
-\begin{frame}[<+->]{\insertsubsection}
+\begin{frame}{\insertsubsection}
 \begin{witemize}
-\item Keine Kompression bei 1-Bit Schwarz-Weiß-Bildern möglich
+\item<1-> 1-Bit Schwarzweißbilder
   \begin{itemize}
+    \item Keine Komprimierung möglich
     \item {\tt0}: Schwarz, {\tt1}: Weiß
   \end{itemize}
 
-\item Einfachster Fall: 8-Bit Graustufenbilder
+\item<2-> 8-Bit Graustufenbilder
   \begin{itemize}
+    \item Einfachster Anwendungsfall
     \item {\tt0}: Schwarz, {\tt1-254}: Graustufen, {\tt255}: Weiß
   \end{itemize}
 
-\item Farbbilder
+\item<3-> Farbbilder
   \begin{itemize}
     \item Ein Huffman-Baum pro Farbkanal möglich
     \item Korrelation zwischen Farbkanälen bleibt unberücksichtigt
@@ -648,7 +982,7 @@ Escape-Code: {\tt001}
 \end{frame}
 
 \subsection{Verlustfreie Audiokompression}
-\begin{frame}[<+->]{\insertsection}
+\begin{frame}{\insertsubsection}
 \begin{witemize}
 \item 16-Bit Samples: 65536 verschiedene Eingabesymbole
 \item Sehr großer Huffman-Baum

@@ -18,7 +18,7 @@
 
 \definecolor{i6blue}{cmyk}{1,0.305,0,0.06}
 \definecolor{i6blueShaded}{cmyk}{0.2,0.061,0,0.012}
-\definecolor{i6bluedark}{rgb}{0.0156,0.2578,0.5625} 
+\definecolor{i6bluedark}{rgb}{0.0156,0.2578,0.5625}
 
 %\mode<presentation>
 
@@ -27,6 +27,7 @@
 \setbeamercolor{normal text}{fg=black, bg=white}
 \setbeamercolor{alerted text}{fg=olive}
 \setbeamercolor{structure}{fg=i6blue}
+\setbeamercolor{frametitle}{fg=black}
 \setbeamercolor{framesubtitle}{fg=i6bluedark}
 
 \setbeamertemplate{itemize item}{\raise1.25pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
@@ -43,10 +44,10 @@
 \hfill
 \Acrobatmenu{FullScreen}{\includegraphics[height=6mm]{logos/rwth-hks44}~~~~\vspace{-.7cm}}}
 \setbeamertemplate{footline}{%
-  \hspace{0.5cm}%
+  \hspace{1cm}
   %%
-  \begin{minipage}{.95\linewidth}
-    \rule{\linewidth}{1pt}
+  \begin{minipage}{0.97\linewidth}
+    \rule{\linewidth}{1pt}\vspace{2pt}
     ~~\insertshortauthor :\phantom{X}\insertshorttitle \hfill
     \Acrobatmenu{GoToPage}{\insertframenumber / \ref{finalSlide}} \hfill
     %\insertframenumber / \inserttotalframenumber \hfill
@@ -57,18 +58,18 @@
   \begin{minipage}{2cm}
     \Acrobatmenu{GoBack}{\includegraphics[height=12mm]{logos/i6-hks44}}\\[1ex]
   \end{minipage}
-} 
+}
 \setbeamertemplate{frametitle}{\begin{center}\strut\insertframetitle\strut\end{center}}
 
 \setbeamertemplate{navigation symbols}[vertical]
-\setbeamerfont{block title}{size={}} 
+\setbeamerfont{block title}{size={}}
 \setbeamerfont{frametitle}{series=\bfseries,size=\large}
 \setbeamerfont{math text}{series=\bfseries,family=\rm}
 \setbeamerfont{math text displayed}{series=\bfseries,family=\rm}
 \setbeamerfont{math text inlined}{series=\bfseries,family=\rm}
 
 % fonts %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\makeatletter 
+\makeatletter
 \RequirePackage{ucs}
 \RequirePackage[utf8]{inputenc}
 \makeatother
@@ -108,7 +109,7 @@
 \AtBeginSection[]{
   {
     \setbeamertemplate{headline}[default] %disable
-   
+
 \setbeamertemplate{footline}{\hfill\raisebox{5ex}[0mm][0mm]{
 \Acrobatmenu{GoBack}{\includegraphics[height=10mm]{logos/rwth-hks44}\hskip2em}}}
     %\setbeamercolor{background canvas}{bg=i6blue}
@@ -166,9 +167,9 @@
 \newcommand<>{\empho}[1]{{\color#2{i6blue}#1}}
 
 %%%%%%%%%%%%%%%%%%%%
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-PDF-mode: t
 %%% TeX-master: "slides"
 %%% ispell-local-dictionary: "american"
-%%% End: 
+%%% End:

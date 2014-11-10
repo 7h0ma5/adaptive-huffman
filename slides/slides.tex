@@ -6,7 +6,6 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % tables
 \usepackage{multirow,array,tabularx,rotating}
@@ -120,9 +119,10 @@ edge from parent path={
 
 % use this, if you use option nosectionoutline
 %
-% \begin{frame}<*>{\iflanguage{ngerman}{Gliederung}{Outline}}
-%       \tableofcontents[subsectionstyle=show/show/show]
-% \end{frame}
+
+\begin{frame}<*>{\iflanguage{ngerman}{Gliederung}{Outline}}
+  \tableofcontents[subsectionstyle=show/hide/hide]
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -175,6 +175,10 @@ A.~Beutelspacher: \newblock Kryptologie, 2005.
     \begin{figure}
       \includegraphics[width=6cm]{bilder/huffman.jpg}
     \end{figure}
+    \vspace{-1em}
+    \begin{center}
+      David Huffman
+    \end{center}
   \end{textblock}
 
   \pnote{Grundlage für die adaptive Huffman-Kodierung}
@@ -204,7 +208,8 @@ A.~Beutelspacher: \newblock Kryptologie, 2005.
   \item Binärbaum $\Rightarrow$ binärer Codes
     \pnote{Lässt sich auch auf andere Zahlensysteme anwenden}
   \item Basiert auf Wahrscheinlichkeitsverteilung des Eingabealphabets
-    \pnote{Wahrscheinlichkeiten können geschätzt oder vorher ermittelt werden}
+    \pnote{Wahrscheinlichkeiten können geschätzt oder vorher ermittelt
+      werden (diskret)}
   \item Aufbau von unten nach oben
     \pnote{Kodierung ist präfixfrei, da die Symbole nur in den Blättern stehen}
   \end{witemize}
@@ -641,7 +646,7 @@ child {
   \begin{enumerate}
   \item Existiert von rechts unten nach links oben gesehen ein
     Nachfolger von $X$ mit einem Häufigkeitszähler $\leq F$, tausche
-    $X$ mit dem letzen dieser Nachfolger.
+    $X$ mit dem letzten dieser Nachfolger.
 
     \emph{Ausnahme:} $X$ darf nicht mit dem Elternknoten getauscht werden
   \item Inkrementiere den Häufigkeitszähler des Knotens $X$ von $F$ auf $F+1$
@@ -649,6 +654,10 @@ child {
   \item Ist $X$ der Wurzelknoten, stoppe die Ausführung, sonst führe
     den Algorithmus auf dem Elternknoten von $X$ aus.
   \end{enumerate}
+
+  \vspace{1cm}
+
+  Komplexität: $\mathcal{O}(n \cdot log(n))$
 \end{frame}
 
 \begin{frame}{\insertsubsection}
@@ -916,11 +925,10 @@ child {
 \begin{frame}{\insertsubsection}
   \begin{witemize}
   \item Einfachster Anwendungsfall
-  \item Festes Eingabealphabet
-  \item Korrellationen zwischen Silben und Wörtern unberücksichtigt
+  \item Festes Eingabealphabet (z.B. ASCII)
+  \item Erweiterung: Bigramme, Silben oder Wörter als Symbole
   \end{witemize}
 \end{frame}
-
 
 \begin{frame}{\insertsubsection}
   \begin{columns}[T]
@@ -992,6 +1000,16 @@ child {
 \begin{frame}{\insertsubsection}
 \begin{figure}[T]
   \centering
+  \includegraphics[width=0.470\textwidth]{bilder/uniformnoise.png}
+  \hfill
+  \only<2>{\includegraphics[width=0.520\linewidth]{bilder/uniformnoise_hist.eps}}
+  \pnote{Gleichverteilung, annähernd maximale Entropie}
+\end{figure}
+\end{frame}
+
+\begin{frame}{\insertsubsection}
+\begin{figure}[T]
+  \centering
   \includegraphics[width=0.470\textwidth]{bilder/moon.jpg}
   \hfill
   \only<2>{\includegraphics[width=0.520\linewidth]{bilder/moon_hist.eps}}
@@ -999,12 +1017,34 @@ child {
 \end{frame}
 
 \begin{frame}{\insertsubsection}
-\begin{figure}[T]
-  \centering
-  \includegraphics[width=0.470\textwidth]{bilder/uniformnoise.png}
-  \hfill
-  \only<2>{\includegraphics[width=0.520\linewidth]{bilder/uniformnoise_hist.eps}}
-\end{figure}
+  \begin{columns}[T]
+    \column{.5\textwidth}
+    \begin{tabular}{c|c|l}
+      $a_i$ & $H(a_i)$ & $C(a_i)$ \\ \hline
+      9 & 12597 & {\tt00100} \\
+      8	& 12580 & {\tt00011} \\
+      10 & 11018 & {\tt110111} \\
+      7	& 10793 & {\tt110110} \\
+      \dots & \dots & \dots \\
+      247 & 830 & {\tt010101001} \\
+      248 & 795 & {\tt010101000} \\
+      249 & 784 & {\tt1101010111} \\
+      255 & 563 & {\tt1101010110} \\
+    \end{tabular}
+
+    \column{.5\textwidth}
+    $548680\ \text{Pixel}$ $(800\text{px} \times 638\text{px})$
+
+    \vspace{1em}
+    Unkodiert: 8 Bit/Pixel \\
+    Kodiert: 7.703 Bit/Pixel
+
+    \vspace{1em}
+    Kompressionsrate: 96.3\%
+
+    \vspace{1em}
+    548.68kB $\Rightarrow$ 528.34kB
+  \end{columns}
 \end{frame}
 
 \subsection{Verlustfreie Audiokompression}
@@ -1031,6 +1071,7 @@ child {
     \vfill
     {\Large \insertauthor}
     \vfill
+
     \email{}
   \end{center}
 \end{frame}

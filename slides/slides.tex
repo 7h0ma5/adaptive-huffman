@@ -74,7 +74,9 @@ edge from parent path={
 {
 %  \inst{1}%
   \strut Human Language Technology and Pattern Recognition\\
-  \strut Computer Science Department, RWTH Aachen University %\\
+  \strut Lehrstuhl für Informatik VI\\
+  \strut Computer Science Department\\
+  \strut RWTH Aachen University, Germany
   %\strut {\tt lehnen@cs.rwth-aachen.de}
 }
 % - Use the \inst command only if there are several affiliations.
@@ -177,7 +179,8 @@ A.~Beutelspacher: \newblock Kryptologie, 2005.
     \end{figure}
     \vspace{-1em}
     \begin{center}
-      David Huffman
+      David Huffman\\
+      {\small1925--1999}
     \end{center}
   \end{textblock}
 
@@ -233,40 +236,42 @@ A.~Beutelspacher: \newblock Kryptologie, 2005.
 \begin{flushright}
 \begin{tabular}{l|l}
 $a_i$ & $P(a_i)$ \\ \hline
-\only<1>
+\only<1| handout:0>
 {A & 0.20 \\
 B & 0.06 \\
 C & 0.10 \\
 D & 0.14 \\
-E & 0.50}\only<2>
+E & 0.50}\only<2| handout:0>
 {E & 0.50 \\
 A & 0.20 \\
 D & 0.14 \\
 C & 0.10 \\
-B & 0.06}\only<3-4>
+B & 0.06}\only<3-4| handout:0>
 {E & 0.50 \\
 A & 0.20 \\
 D & 0.14 \\
 \color{red}C & \color{red}0.10 \\
-\color{red}B & \color{red}0.06}\only<5>
+\color{red}B & \color{red}0.06}\only<5| handout:0>
 {E & 0.50 \\
 A & 0.20 \\
 \color{ForestGreen}\{C, B\} & \color{ForestGreen}0.16 \\
-D & 0.14}\only<6-7>
+D & 0.14}\only<6-7| handout:0>
 {E & 0.50 \\
 A & 0.20 \\
 \color{red}\{C, B\} & \color{red}0.16 \\
-\color{red}D & \color{red}0.14}\only<8>
+\color{red}D & \color{red}0.14}\only<8| handout:0>
 {E & 0.50 \\
 \color{ForestGreen}\{B, C, D\} & \color{ForestGreen}0.30 \\
-A & 0.20}\only<9-10>
+A & 0.20}\only<9-10| handout:0>
 {E & 0.50 \\
 \color{red}\{B, C, D\} & \color{red}0.30 \\
-\color{red}A & \color{red}0.20}\only<11>
+\color{red}A & \color{red}0.20}\only<11| handout:0>
 {E & 0.50 \\
-\color{ForestGreen}\{A, B, C, D\} & \color{ForestGreen}0.50}\only<12-13>
+\color{ForestGreen}\{A, B, C, D\} & \color{ForestGreen}0.50}\only<12-13| handout:0>
 {\color{red}E & \color{red}0.50 \\
-\color{red}\{A, B, C, D\} & \color{red}0.50}\only<14-15>
+\color{red}\{A, B, C, D\} & \color{red}0.50}\only<14| handout:0>
+{\color{ForestGreen}\{A, B, C, D, E\} & \color{ForestGreen}1.00}
+\only<15| handout:1>
 {\color{ForestGreen}\{A, B, C, D, E\} & \color{ForestGreen}1.00}
 \end{tabular}
 \end{flushright}
@@ -528,7 +533,7 @@ child {
     \item Problem: Unterscheidung von Codewörtern und unkodierten
       Symbolen
     \item Lösung: Benutzung eines speziellen Escape-Codes
-    \item Neue Probleme:
+    \item Weitere Probleme:
       \begin{itemize}
       \item Escape-Code darf kein Codewort und kein Präfix davon sein
       \item Codewörter ändern sich laufend
@@ -657,7 +662,7 @@ child {
 
   \vspace{1cm}
 
-  Komplexität: $\mathcal{O}(n \cdot log(n))$
+  Komplexität: $\mathcal{O}(n \cdot \log(n))$
 \end{frame}
 
 \begin{frame}{\insertsubsection}
@@ -835,12 +840,12 @@ level 2/.style={sibling distance=3cm, level distance=3.5cm},
 \node {930}
 child {
   child {
-    node {A}
+    node[leaf] {A}
     edge from parent
     node[left] {310}
   }
   child {
-    node {B}
+    node[leaf] {B}
     edge from parent
     node[right] {310}
   }
@@ -849,12 +854,12 @@ child {
 }
 child {
   child {
-    node {C}
+    node[leaf] {C}
     edge from parent
     node[left] {155}
   }
   child {
-    node {D}
+    node[leaf] {D}
     edge from parent
     node[right] {155}
   }
@@ -977,19 +982,19 @@ child {
 
 \begin{frame}{\insertsubsection}
 \begin{witemize}
-\item<1-> 1-Bit Schwarzweißbilder
+\item 1-Bit Schwarzweißbilder
   \begin{itemize}
     \item Keine Komprimierung möglich
     \item {\tt0}: Schwarz, {\tt1}: Weiß
   \end{itemize}
 
-\item<2-> 8-Bit Graustufenbilder
+\item 8-Bit Graustufenbilder
   \begin{itemize}
     \item Einfachster Anwendungsfall
     \item {\tt0}: Schwarz, {\tt1-254}: Graustufen, {\tt255}: Weiß
   \end{itemize}
 
-\item<3-> Farbbilder
+\item Farbbilder
   \begin{itemize}
     \item Ein Huffman-Baum pro Farbkanal möglich
     \item Korrelation zwischen Farbkanälen bleibt unberücksichtigt
